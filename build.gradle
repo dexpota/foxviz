@@ -3,12 +3,16 @@ plugins {
     id 'application'
 }
 
+sourceCompatibility = 1.8
+
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile "net.sourceforge.argparse4j:argparse4j:0.8.1"
 }
 
 mainClassName = 'me.destro.foxviz.Main'
