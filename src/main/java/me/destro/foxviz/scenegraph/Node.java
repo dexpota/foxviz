@@ -1,6 +1,7 @@
 package me.destro.foxviz.scenegraph;
 
-import processing.core.PApplet;
+import remixlab.dandelion.geom.Frame;
+import remixlab.proscene.Scene;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,14 +9,20 @@ import java.util.List;
 
 public class Node implements Iterable<Node> {
     List<Node> nodes;
-    NodeBeahviour beahviour;
+    Visitor beahviour;
+    Frame frame;
 
-    public interface NodeBeahviour {
-        void visit(PApplet context);
+    public interface Visitor {
+        void visit(Scene scene);
     }
 
-    public Node(NodeBeahviour beahviour) {
-        nodes = new LinkedList<>();
+    public Node(Visitor beahviour) {
+        this(new Frame(), beahviour);
+    }
+
+    public Node(Frame frame, Visitor beahviour) {
+        this.nodes = new LinkedList<>();
+        this.frame = frame;
         this.beahviour = beahviour;
     }
 
@@ -34,8 +41,9 @@ public class Node implements Iterable<Node> {
         return false;
     }
 
-    public void visit(PApplet context) {
-        beahviour.visit(context);
+    public void visit(Scene scene) {
+        //scene.applyTransformation(frame);
+        beahviour.visit(scene);
     }
 
     @Override

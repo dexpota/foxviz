@@ -5,11 +5,18 @@ import me.destro.foxviz.cli.Utilities;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.NodeWalker;
 import processing.core.PApplet;
+import remixlab.dandelion.geom.Frame;
+import remixlab.proscene.Scene;
 
 public class Main extends PApplet {
     private static Arguments arguments;
     private boolean centered = false;
-    private Node root;
+    private Scene scene1;
+    private Scene scene2;
+    private Scene scene3;
+    private Node screen1;
+    private Node screen2;
+    private Node screen3;
 
     public static void main(String[] args) {
         arguments = Utilities.parseArguments(args);
@@ -21,60 +28,54 @@ public class Main extends PApplet {
     public void settings() {
         super.settings();
 
-        root = new Node((PApplet context) -> {});
-
-        Node screen1 = new Node((PApplet context) -> {
-            translate(0, 0);
-            scale(3.0f/width, height);
-            clip(0, 0, 1, 1);
+        screen1 = new Node(new Frame(), (Scene context) -> {
+            context.pg().background(0);
+            context.pg().ellipse(0, 0, 100, 100);
         });
 
-        Node geometry = new Node((PApplet context) -> {
-            fill(255, 0, 0);
-            //translate(0.5f, 0.5f);
-            ellipse(0, 0, 1.0f, 1.0f);
+        screen2 = new Node((Scene context) -> {
+            context.pg().background(0);
+            context.pg().ellipse(0, 0, 200, 400);
         });
 
-        screen1.addNode(geometry);
-
-        Node screen2 = new Node((PApplet context) -> {
-            translate(width/3.0f, 0);
-            //scale(3.0f/width, 1.0f/height);
-            scale(width/3.0f, height);
-            clip(0, 0, 1, 1);
+        screen3 = new Node((Scene context) -> {
+            context.pg().background(0);
+            context.pg().ellipse(0, 0, 100, 100);
         });
 
-        screen2.addNode(geometry);
-
-        Node screen3 = new Node((PApplet context) -> {
-            translate(2.0f * width/3.0f, 0);
-            scale(3.0f/width, height);
-            clip(0, 0, 1, 1);
-        });
-
-        screen3.addNode(geometry);
-
-        root.addNode(screen2);
-        //root.addNode(screen2);
-        //root.addNode(screen3);
-
-        size(arguments.width, arguments.height);
+        size(arguments.width, arguments.height, JAVA2D);
     }
 
     @Override
     public void setup() {
         super.setup();
+        scene1 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D));
+        scene2 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D), (int) (width/3.0), 0);
+        scene3 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D), (int) (2.0 * width/3.0), 0);
+
+        //scene.setAxesVisualHint(false); // hide axis
+        //scene.setGridVisualHint(false); // hide grid
     }
 
     @Override
     public void draw() {
-        super.draw();
-
         if (!centered)
             centerWindow();
-        background(255, 255, 255);
-        NodeWalker.walk(root, this);
-        line(5, 5, 50, 50);
+
+        scene1.beginDraw();
+        NodeWalker.walk(screen1, scene1);
+        scene1.endDraw();
+        scene1.display();
+
+        scene2.beginDraw();
+        NodeWalker.walk(screen2, scene2);
+        scene2.endDraw();
+        scene2.display();
+
+        scene3.beginDraw();
+        NodeWalker.walk(screen3, scene3);
+        scene3.endDraw();
+        scene3.display();
     }
     
     private void centerWindow()

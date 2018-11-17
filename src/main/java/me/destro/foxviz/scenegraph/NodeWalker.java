@@ -1,14 +1,15 @@
 package me.destro.foxviz.scenegraph;
 
-import processing.core.PApplet;
+import remixlab.proscene.Scene;
 
 public class NodeWalker {
-    public static void walk(Node root, PApplet context) {
+    public static void walk(Node root, Scene scene) {
+        root.visit(scene);
         for (Node node : root) {
-            context.pushMatrix();
-            node.visit(context);
-            walk(node, context);
-            context.popMatrix();
+            //scene.pApplet().pushMatrix();
+            node.visit(scene);
+            walk(node, scene);
+            //scene.pApplet().popMatrix();
         }
     }
 }
