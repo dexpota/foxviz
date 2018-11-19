@@ -8,6 +8,8 @@ import processing.core.PApplet;
 import remixlab.dandelion.geom.Frame;
 import remixlab.proscene.Scene;
 
+import java.util.List;
+
 public class Main extends PApplet {
     private static Arguments arguments;
     private boolean centered = false;
@@ -17,6 +19,7 @@ public class Main extends PApplet {
     private Node screen1;
     private Node screen2;
     private Node screen3;
+    private List<Table> tables;
 
     public static void main(String[] args) {
         arguments = Utilities.parseArguments(args);
@@ -29,18 +32,18 @@ public class Main extends PApplet {
         super.settings();
 
         screen1 = new Node(new Frame(), (Scene context) -> {
-            context.pg().background(0);
-            context.pg().ellipse(0, 0, 100, 100);
+            context.pg().background(unhex(Configuration.backgroundColor));
+            //context.pg().ellipse(0, 0, 100, 100);
         });
 
         screen2 = new Node((Scene context) -> {
-            context.pg().background(0);
+            context.pg().background(unhex(Configuration.backgroundColor));
             context.pg().ellipse(0, 0, 200, 400);
         });
 
         screen3 = new Node((Scene context) -> {
-            context.pg().background(0);
-            context.pg().ellipse(0, 0, 100, 100);
+            context.pg().background(unhex(Configuration.backgroundColor));
+            //context.pg().ellipse(0, 0, 100, 100);
         });
 
         size(arguments.width, arguments.height, JAVA2D);
@@ -53,8 +56,25 @@ public class Main extends PApplet {
         scene2 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D), (int) (width/3.0), 0);
         scene3 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D), (int) (2.0 * width/3.0), 0);
 
-        //scene.setAxesVisualHint(false); // hide axis
-        //scene.setGridVisualHint(false); // hide grid
+        scene1.setAxesVisualHint(false); // hide axis
+        scene1.setGridVisualHint(false); // hide grid
+
+        scene2.setAxesVisualHint(false); // hide axis
+        scene2.setGridVisualHint(false); // hide grid
+
+        //scene3.setAxesVisualHint(false); // hide axis
+        //scene3.setGridVisualHint(false); // hide grid
+
+        Frame froot = new Frame();
+        froot.translate(-100, -100);
+        Node root = new Node(froot, scene->{});
+
+        screen3.addNode(root);
+
+        tables = Table.generateTables(200, 200, 3);
+        for(Table t : tables) {
+            root.addNode(t.node);
+        }
     }
 
     @Override

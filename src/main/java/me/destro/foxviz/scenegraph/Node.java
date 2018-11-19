@@ -42,7 +42,7 @@ public class Node implements Iterable<Node> {
     }
 
     public void visit(Scene scene) {
-        //scene.applyTransformation(frame);
+        scene.applyTransformation(frame);
         beahviour.visit(scene);
     }
 
