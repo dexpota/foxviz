@@ -12,15 +12,16 @@ import java.util.List;
 
 import static processing.core.PApplet.unhex;
 import static processing.core.PConstants.JAVA2D;
+import static processing.core.PConstants.P2D;
 
 public class SceneUtilities {
 
     public static List<Scene> buildScreens(PApplet pApplet, int width, int height) {
         List<Scene> scenes = new ArrayList<>();
 
-        scenes.add(new Scene(pApplet, pApplet.createGraphics((int) (width/3.0), height, JAVA2D)));
-        scenes.add(new Scene(pApplet, pApplet.createGraphics((int) (width/3.0), height, JAVA2D), (int) (width/3.0), 0));
-        scenes.add(new Scene(pApplet, pApplet.createGraphics((int) (width/3.0), height, JAVA2D), (int) (2.0 * width/3.0), 0));
+        scenes.add(new Scene(pApplet, pApplet.createGraphics((int) (width/3.0), height, P2D)));
+        scenes.add(new Scene(pApplet, pApplet.createGraphics((int) (width/3.0), height, P2D), (int) (width/3.0), 0));
+        scenes.add(new Scene(pApplet, pApplet.createGraphics((int) (width/3.0), height, P2D), (int) (2.0 * width/3.0), 0));
 
         scenes.get(0).setAxesVisualHint(false); // hide axis
         scenes.get(0).setGridVisualHint(false); // hide grid

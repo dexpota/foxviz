@@ -28,7 +28,7 @@ public class Main extends PApplet {
     @Override
     public void settings() {
         super.settings();
-        size(arguments.width, arguments.height, JAVA2D);
+        size(arguments.width, arguments.height, P2D);
     }
 
     @Override
