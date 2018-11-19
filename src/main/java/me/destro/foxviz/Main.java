@@ -4,6 +4,8 @@ import me.destro.foxviz.cli.Arguments;
 import me.destro.foxviz.cli.Utilities;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.NodeWalker;
+import me.destro.foxviz.scenes.Table;
+import me.destro.foxviz.utilities.SceneUtilities;
 import processing.core.PApplet;
 import remixlab.dandelion.geom.Frame;
 import remixlab.proscene.Scene;
@@ -13,13 +15,9 @@ import java.util.List;
 public class Main extends PApplet {
     private static Arguments arguments;
     private boolean centered = false;
-    private Scene scene1;
-    private Scene scene2;
-    private Scene scene3;
-    private Node screen1;
-    private Node screen2;
-    private Node screen3;
-    private List<Table> tables;
+
+    List<Scene> screens;
+    List<Node> scenes;
 
     public static void main(String[] args) {
         arguments = Utilities.parseArguments(args);
@@ -30,51 +28,15 @@ public class Main extends PApplet {
     @Override
     public void settings() {
         super.settings();
-
-        screen1 = new Node(new Frame(), (Scene context) -> {
-            context.pg().background(unhex(Configuration.backgroundColor));
-            //context.pg().ellipse(0, 0, 100, 100);
-        });
-
-        screen2 = new Node((Scene context) -> {
-            context.pg().background(unhex(Configuration.backgroundColor));
-            context.pg().ellipse(0, 0, 200, 400);
-        });
-
-        screen3 = new Node((Scene context) -> {
-            context.pg().background(unhex(Configuration.backgroundColor));
-            //context.pg().ellipse(0, 0, 100, 100);
-        });
-
         size(arguments.width, arguments.height, JAVA2D);
     }
 
     @Override
     public void setup() {
         super.setup();
-        scene1 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D));
-        scene2 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D), (int) (width/3.0), 0);
-        scene3 = new Scene(this, createGraphics((int) (width/3.0), height, JAVA2D), (int) (2.0 * width/3.0), 0);
 
-        scene1.setAxesVisualHint(false); // hide axis
-        scene1.setGridVisualHint(false); // hide grid
-
-        scene2.setAxesVisualHint(false); // hide axis
-        scene2.setGridVisualHint(false); // hide grid
-
-        //scene3.setAxesVisualHint(false); // hide axis
-        //scene3.setGridVisualHint(false); // hide grid
-
-        Frame froot = new Frame();
-        froot.translate(-100, -100);
-        Node root = new Node(froot, scene->{});
-
-        screen3.addNode(root);
-
-        tables = Table.generateTables(200, 200, 3);
-        for(Table t : tables) {
-            root.addNode(t.node);
-        }
+        screens = SceneUtilities.buildScreens(this, width, height);
+        scenes = SceneUtilities.buildScenes();
     }
 
     @Override
@@ -82,25 +44,17 @@ public class Main extends PApplet {
         if (!centered)
             centerWindow();
 
-        scene1.beginDraw();
-        NodeWalker.walk(screen1, scene1);
-        scene1.endDraw();
-        scene1.display();
-
-        scene2.beginDraw();
-        NodeWalker.walk(screen2, scene2);
-        scene2.endDraw();
-        scene2.display();
-
-        scene3.beginDraw();
-        NodeWalker.walk(screen3, scene3);
-        scene3.endDraw();
-        scene3.display();
+        for (int index = 0; index < scenes.size(); index++) {
+            screens.get(index).beginDraw();
+            NodeWalker.walk(scenes.get(index), screens.get(index));
+            screens.get(index).endDraw();
+            screens.get(index).display();
+        }
     }
     
     private void centerWindow()
     {
-        if(frame != null && centered == false) {
+        if(frame != null && !centered) {
             frame.setLocation(displayWidth/2 - width/2,displayHeight/2 - height/2);
             centered = true;
         }

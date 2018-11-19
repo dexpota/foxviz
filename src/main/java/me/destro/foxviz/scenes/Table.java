@@ -1,4 +1,4 @@
-package me.destro.foxviz;
+package me.destro.foxviz.scenes;
 
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.utilities.MathUtilities;
