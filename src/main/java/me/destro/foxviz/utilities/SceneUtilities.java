@@ -54,6 +54,13 @@ public class SceneUtilities {
         Node screen1_drawing = new TextSpawningNode();
         screen1.addNode(screen1_drawing);
 
+        Frame frame1b = new Frame();
+        frame1b.translate(1000, 0);
+        Node screen1b = new TransformationNode(frame1b);
+        screen1b.appendNode(new TextSpawningNode());
+        // TODO restore this node.
+        //screen1.addNode(screen1b);
+
         Frame frame2 = new Frame();
         frame2.translate(2000, 0);
         Node screen2 = new TransformationNode(frame2);
