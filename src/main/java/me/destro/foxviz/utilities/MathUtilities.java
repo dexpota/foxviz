@@ -1,5 +1,9 @@
 package me.destro.foxviz.utilities;
 
+import processing.core.PApplet;
+import remixlab.dandelion.geom.Frame;
+import remixlab.dandelion.geom.Quat;
+
 import java.util.Random;
 
 public final class MathUtilities {
@@ -18,5 +22,17 @@ public final class MathUtilities {
             randomGenerator = new Random();
         }
         return randomGenerator.nextInt(max) + min;
+    }
+
+    public static void applyTransformation(PApplet scene, Frame var1, boolean is2d) {
+        if (is2d) {
+            scene.translate(var1.translation().x(), var1.translation().y());
+            scene.rotate(var1.rotation().angle());
+            scene.scale(var1.scaling(), var1.scaling());
+        } else {
+            scene.translate(var1.translation().vec[0], var1.translation().vec[1], var1.translation().vec[2]);
+            scene.rotate(var1.rotation().angle(), ((Quat)var1.rotation()).axis().vec[0], ((Quat)var1.rotation()).axis().vec[1], ((Quat)var1.rotation()).axis().vec[2]);
+            scene.scale(var1.scaling(), var1.scaling(), var1.scaling());
+        }
     }
 }

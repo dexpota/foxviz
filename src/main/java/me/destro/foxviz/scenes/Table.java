@@ -2,6 +2,7 @@ package me.destro.foxviz.scenes;
 
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.utilities.MathUtilities;
+import processing.core.PApplet;
 import remixlab.dandelion.geom.Frame;
 import remixlab.proscene.Scene;
 
@@ -19,10 +20,10 @@ public class Table {
         f1.translate(x, y);
         color = unhex("FF40a361");
 
-        node = new Node(f1, (Scene context) -> {
+        /*node = new Node(f1, (PApplet context) -> {
             context.pg().fill(color);
             context.pg().ellipse(0, 0, 10, 10);
-        });
+        });*/
     }
 
     public static List<Table> generateTables(int w, int h, int count){

@@ -2,12 +2,14 @@ package me.destro.foxviz;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import me.destro.foxviz.scenegraph.Node;
+import me.destro.foxviz.scenegraph.NodeWalker;
+import me.destro.foxviz.utilities.SceneUtilities;
 import processing.core.PApplet;
 
 public class ProcessingApplication extends PApplet {
-    private Disposable subscribtion;
     private boolean centered = false;
-    private String text;
+    Node root;
 
     @Override
     public void settings() {
@@ -19,13 +21,7 @@ public class ProcessingApplication extends PApplet {
     public void setup() {
         super.setup();
 
-        text = "Hello processing";
-        subscribtion = Main.api.searchTweets()
-                .subscribeOn(Schedulers.computation())
-                .subscribe(tweet -> {
-                    text = tweet.text;
-                    System.out.println(String.format("Tweet: %s", tweet.text));
-                });
+        root = SceneUtilities.buildScene();
     }
 
     @Override
@@ -33,10 +29,7 @@ public class ProcessingApplication extends PApplet {
         if (!centered)
             centerWindow();
 
-        background(Configuration.backgroundColor);
-        translate(width/2.0f, height/2.0f);
-        textSize(32);
-        text(text, 0, 0);
+        NodeWalker.walk(root, this);
     }
 
     private void centerWindow() {
@@ -46,10 +39,4 @@ public class ProcessingApplication extends PApplet {
         }
     }
 
-    @Override
-    public void stop() {
-        if (subscribtion != null && !subscribtion.isDisposed())
-            subscribtion.dispose();
-        super.stop();
-    }
 }

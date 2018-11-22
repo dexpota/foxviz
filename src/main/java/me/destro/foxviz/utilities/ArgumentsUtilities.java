@@ -23,6 +23,12 @@ public class ArgumentsUtilities {
                 .type(Integer.class)
                 .help("Height of the screen.");
 
+        parser.addArgument("--pixel-size-mm")
+                .dest("pixel-size")
+                .required(true)
+                .type(Double.class)
+                .help("Pixel size in mm.");
+
         return parser;
     }
 
@@ -37,6 +43,6 @@ public class ArgumentsUtilities {
             System.exit(1);
         }
 
-        return new Arguments(ns.getInt("width"), ns.getInt("height"));
+        return new Arguments(ns.getInt("width"), ns.getInt("height"), ns.getDouble("pixel-size"));
     }
 }

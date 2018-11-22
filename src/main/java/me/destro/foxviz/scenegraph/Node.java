@@ -1,5 +1,7 @@
 package me.destro.foxviz.scenegraph;
 
+import me.destro.foxviz.utilities.MathUtilities;
+import processing.core.PApplet;
 import remixlab.dandelion.geom.Frame;
 import remixlab.proscene.Scene;
 
@@ -13,7 +15,7 @@ public class Node implements Iterable<Node> {
     Frame frame;
 
     public interface Visitor {
-        void visit(Scene scene);
+        void visit(PApplet scene);
     }
 
     public Node(Visitor beahviour) {
@@ -41,8 +43,8 @@ public class Node implements Iterable<Node> {
         return false;
     }
 
-    public void visit(Scene scene) {
-        scene.applyTransformation(frame);
+    public void visit(PApplet scene) {
+        MathUtilities.applyTransformation(scene, frame, true);
         beahviour.visit(scene);
     }
 
