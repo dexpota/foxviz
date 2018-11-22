@@ -7,6 +7,9 @@ import remixlab.dandelion.geom.Frame;
 public class TransformationNode extends Node {
     Frame frame;
 
+    // TODO this is an hack, change it
+    int y;
+
     public TransformationNode(Frame frame) {
         this.frame = frame;
     }
@@ -14,5 +17,6 @@ public class TransformationNode extends Node {
     @Override
     public void draw(PApplet scene) {
         MathUtilities.applyTransformation(scene, frame, true);
+        scene.translate(0, y);
     }
 }
