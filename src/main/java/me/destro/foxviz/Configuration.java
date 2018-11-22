@@ -1,5 +1,11 @@
 package me.destro.foxviz;
 
+import static processing.core.PApplet.unhex;
+
 public final class Configuration {
-    public static String backgroundColor = "FF171717";
+    public static int backgroundColor;
+
+    static {
+        backgroundColor = unhex("FF171717");
+    }
 }

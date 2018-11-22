@@ -39,17 +39,17 @@ public class SceneUtilities {
         List<Node> scenes = new ArrayList<>();
 
         Node scene1 = new Node(new Frame(), (Scene context) -> {
-            context.pg().background(unhex(Configuration.backgroundColor));
+            context.pg().background(Configuration.backgroundColor);
             //context.pg().ellipse(0, 0, 100, 100);
         });
 
         Node scene2 = new Node((Scene context) -> {
-            context.pg().background(unhex(Configuration.backgroundColor));
+            context.pg().background(Configuration.backgroundColor);
             context.pg().ellipse(0, 0, 200, 400);
         });
 
         Node scene3 = new Node((Scene context) -> {
-            context.pg().background(unhex(Configuration.backgroundColor));
+            context.pg().background(Configuration.backgroundColor);
             //context.pg().ellipse(0, 0, 100, 100);
         });
 
