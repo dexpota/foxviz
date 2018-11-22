@@ -1,12 +1,12 @@
-package me.destro.foxviz.cli;
+package me.destro.foxviz.utilities;
 
-import me.destro.foxviz.Main;
+import me.destro.foxviz.cli.Arguments;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
-public final class Utilities {
+public class ArgumentsUtilities {
     private static ArgumentParser buildArgumentParser() {
         ArgumentParser parser = ArgumentParsers.newFor("prog").build()
                 .description("Process some integers.");
@@ -27,7 +27,7 @@ public final class Utilities {
     }
 
     public static Arguments parseArguments(String[] args) {
-        ArgumentParser parser = Utilities.buildArgumentParser();
+        ArgumentParser parser = ArgumentsUtilities.buildArgumentParser();
 
         Namespace ns = null;
         try {
@@ -39,5 +39,4 @@ public final class Utilities {
 
         return new Arguments(ns.getInt("width"), ns.getInt("height"));
     }
-
 }

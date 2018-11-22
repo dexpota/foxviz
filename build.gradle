@@ -13,6 +13,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     compile "net.sourceforge.argparse4j:argparse4j:0.8.1"
+    compile 'com.squareup.retrofit2:retrofit:2.5.0'
 }
 
 mainClassName = 'me.destro.foxviz.Main'
