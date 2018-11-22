@@ -9,23 +9,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Node implements Iterable<Node> {
+public abstract class Node implements Iterable<Node> {
     List<Node> nodes;
-    Visitor beahviour;
-    Frame frame;
 
-    public interface Visitor {
-        void visit(PApplet scene);
-    }
-
-    public Node(Visitor beahviour) {
-        this(new Frame(), beahviour);
-    }
-
-    public Node(Frame frame, Visitor beahviour) {
+    public Node() {
         this.nodes = new LinkedList<>();
-        this.frame = frame;
-        this.beahviour = beahviour;
     }
 
     public void addNode(Node node) {
@@ -43,10 +31,7 @@ public class Node implements Iterable<Node> {
         return false;
     }
 
-    public void visit(PApplet scene) {
-        MathUtilities.applyTransformation(scene, frame, true);
-        beahviour.visit(scene);
-    }
+    public abstract void draw(PApplet scene);
 
     @Override
     public Iterator<Node> iterator() {

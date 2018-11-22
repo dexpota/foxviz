@@ -1,7 +1,5 @@
 package me.destro.foxviz;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.NodeWalker;
 import me.destro.foxviz.utilities.SceneUtilities;
