@@ -3,10 +3,7 @@ package me.destro.foxviz.utilities;
 import com.github.javafaker.Faker;
 import me.destro.foxviz.Configuration;
 import me.destro.foxviz.Main;
-import me.destro.foxviz.scenegraph.DrawingNode;
-import me.destro.foxviz.scenegraph.Node;
-import me.destro.foxviz.scenegraph.TextSpawningNode;
-import me.destro.foxviz.scenegraph.TransformationNode;
+import me.destro.foxviz.scenegraph.*;
 import processing.core.PApplet;
 import remixlab.dandelion.geom.Frame;
 import remixlab.proscene.Scene;
@@ -45,33 +42,20 @@ public class SceneUtilities {
 
         root.addNode(root_drawing);
 
-        Faker faker = new Faker();
-        String text = faker.lorem().fixedString(250) + "END";
-
-        Frame frame1 = new Frame();
-        frame1.translate(0, 0);
-        Node screen1 = new TransformationNode(frame1);
-        Node screen1_drawing = new TextSpawningNode();
-        screen1.addNode(screen1_drawing);
-
-        Frame frame1b = new Frame();
-        frame1b.translate(1000, 0);
-        Node screen1b = new TransformationNode(frame1b);
-        screen1b.appendNode(new TextSpawningNode());
-        // TODO restore this node.
-        //screen1.addNode(screen1b);
+        Node screen1 = buildFirstScreen();
 
         Frame frame2 = new Frame();
         frame2.translate(2000, 0);
         Node screen2 = new TransformationNode(frame2);
         Node screen2_drawing = new DrawingNode(scene -> {
-            scene.clip((float) (2000.f/Main.arguments.pixelSize), 0, (float) (2000.f/Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
             scene.fill(128, 0, 0);
             scene.noStroke();
             scene.rect(0, 0, 1000, 1000);
         });
 
-        screen2.addNode(screen2_drawing);
+        screen2.appendNode(new ClipNode((float) (2000.f/Main.arguments.pixelSize), 0,
+                (float) (2000.f/Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
+                .appendNode(screen2_drawing);
 
         Frame frame3 = new Frame();
         frame3.translate(4000, 0);
@@ -97,4 +81,25 @@ public class SceneUtilities {
         return root;
     }
 
+
+    private static Node buildFirstScreen() {
+        Node root = new TransformationNode(new Frame());
+
+        Node left = new TransformationNode(new Frame());
+        left.appendNode(new ClipNode(0, 0,
+                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
+                .appendNode(new TextSpawningNode());
+
+        Frame frame1b = new Frame();
+        frame1b.translate(1000, 0);
+        Node right = new TransformationNode(frame1b);
+        right.appendNode(new ClipNode((float) (1000.f/ Main.arguments.pixelSize), 0,
+                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
+                .appendNode(new TextSpawningNode());
+
+
+        root.addNode(left);
+        root.addNode(right);
+        return root;
+    }
 }

@@ -28,8 +28,6 @@ public class TextSpawningNode extends Node {
 
     @Override
     public void draw(PApplet scene) {
-        // TODO move clip function to a node type.
-        scene.clip(0, 0, (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
         scene.background(Configuration.backgroundColor);
         scene.fill(128, 0, 0);
         scene.noStroke();
