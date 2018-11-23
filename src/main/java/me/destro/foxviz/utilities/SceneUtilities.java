@@ -35,18 +35,14 @@ public class SceneUtilities {
     }
 
     public static Node buildScene() {
-        Frame root_frame = new Frame();
-        root_frame.scale((float) (1.0/ Main.arguments.pixelSize));
-        Node root = new TransformationNode(root_frame);
+        float scale = (float) (1.0/ Main.arguments.pixelSize);
+        Node root = new TransformationNode(0, 0, 0, scale, scale);
         Node root_drawing = new DrawingNode(scene -> scene.background(Configuration.backgroundColor));
-
         root.addNode(root_drawing);
 
         Node screen1 = buildFirstScreen();
 
-        Frame frame2 = new Frame();
-        frame2.translate(2000, 0);
-        Node screen2 = new TransformationNode(frame2);
+        Node screen2 = new TransformationNode(2000, 0);
         Node screen2_drawing = new DrawingNode(scene -> {
             scene.fill(128, 0, 0);
             scene.noStroke();
@@ -57,9 +53,7 @@ public class SceneUtilities {
                 (float) (2000.f/Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
                 .appendNode(screen2_drawing);
 
-        Frame frame3 = new Frame();
-        frame3.translate(4000, 0);
-        Node screen3 = new TransformationNode(frame3);
+        Node screen3 = new TransformationNode(4000, 0);
         Node screen3_drawing = new DrawingNode( scene -> {
             scene.clip((float) (2*2000.f/Main.arguments.pixelSize), 0, (float) (2000.f/Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
             scene.fill(64);
@@ -83,20 +77,17 @@ public class SceneUtilities {
 
 
     private static Node buildFirstScreen() {
-        Node root = new TransformationNode(new Frame());
+        Node root = new TransformationNode();
 
-        Node left = new TransformationNode(new Frame());
+        Node left = new TransformationNode();
         left.appendNode(new ClipNode(0, 0,
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
                 .appendNode(new TextSpawningNode());
 
-        Frame frame1b = new Frame();
-        frame1b.translate(1000, 0);
-        Node right = new TransformationNode(frame1b);
+        Node right = new TransformationNode(1000, 0);
         right.appendNode(new ClipNode((float) (1000.f/ Main.arguments.pixelSize), 0,
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
                 .appendNode(new TextSpawningNode());
-
 
         root.addNode(left);
         root.addNode(right);

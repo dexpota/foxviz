@@ -35,33 +35,20 @@ public class TextSpawningNode extends Node {
 
         // TODO Moving this to a function
         // TODO remove the nodes when they are not visible anymore.
-        String t = tweets.peek();
-        if(t != null) {
-            t = tweets.remove();
-            Frame f = new Frame();
-            Node n =  new TransformationNode(f);
-            String finalT = t;
-            Node g = new DrawingNode(scene1 -> {
-                // TODO make a TextNode type
-                // Back to screen space or weird things happen with the text
-                // TODO this is a screen transformation node
-                scene.scale((float) Main.arguments.pixelSize);
-                scene.textSize(12);
-                scene.fill(255);
-                scene.text(finalT, 0, 0,
-                        (float) (1000.f/Main.arguments.pixelSize),
-                        (float) (1000.f/Main.arguments.pixelSize));
-                scene.scale((float) (1.0f/Main.arguments.pixelSize));
+        String tweet = tweets.peek();
+        if(tweet != null) {
+            tweet = tweets.remove();
 
-                Ani.to(n, 20, "y", 4000);
+            Node transformationNode =  new TransformationNode();
+
+            Node animationNode = new DrawingNode(scene1 -> {
+                Ani.to(transformationNode, 20, "y", 4000);
             });
-            Node h = new DrawingNode(scene1 -> {
-                scene.fill(230, 123, 54);
-                scene.rect(30, 30, 200, 15);
-            });
-            h.addNode(g);
-            n.addNode(h);
-            this.addNode(n);
+
+            Node textNode = new TextNode(tweet);
+
+            animationNode.appendNode(transformationNode).appendNode(textNode);
+            this.addNode(animationNode);
         }
     }
 }

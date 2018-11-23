@@ -1,22 +1,29 @@
 package me.destro.foxviz.scenegraph;
 
-import me.destro.foxviz.utilities.MathUtilities;
 import processing.core.PApplet;
-import remixlab.dandelion.geom.Frame;
 
 public class TransformationNode extends Node {
-    Frame frame;
+    float x, y;
+    float angle;
+    float sx, sy;
 
-    // TODO this is an hack, change it
-    int y;
 
-    public TransformationNode(Frame frame) {
-        this.frame = frame;
+    public TransformationNode() {this(0.f, 0.f, 0.f, 1.f, 1.f);}
+
+    public TransformationNode(float x, float y) {this(x, y, 0.f, 1.f, 1.f);}
+
+    public TransformationNode(float x, float y, float angle, float sx, float sy) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.sx = sx;
+        this.sy = sy;
     }
 
     @Override
     public void draw(PApplet scene) {
-        MathUtilities.applyTransformation(scene, frame, true);
-        scene.translate(0, y);
+        scene.translate(x, y);
+        scene.rotate(angle);
+        scene.scale(sx, sy);
     }
 }
