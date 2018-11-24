@@ -5,6 +5,7 @@ import processing.core.PApplet;
 
 public class TextNode extends Node {
     String text;
+    float fontSize = 12.0f;
 
     public TextNode(String text) {
         this.text = text;
@@ -19,7 +20,7 @@ public class TextNode extends Node {
         // Back to screen space or weird things happen with the text
         // TODO this is a screen transformation node
         scene.scale((float) Main.arguments.pixelSize);
-        scene.textSize(12);
+        scene.textSize(fontSize);
         scene.fill(255);
         scene.text(this.text, 0, 0,
                 (float) (1000.f/Main.arguments.pixelSize),

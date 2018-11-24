@@ -8,7 +8,7 @@ import processing.core.PApplet;
 
 public class ProcessingApplication extends PApplet {
     private boolean centered = false;
-    Node root;
+    private Node root;
 
     @Override
     public void settings() {

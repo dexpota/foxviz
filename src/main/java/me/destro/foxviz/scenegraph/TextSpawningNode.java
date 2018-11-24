@@ -29,9 +29,6 @@ public class TextSpawningNode extends Node {
     @Override
     public void draw(PApplet scene) {
         scene.background(Configuration.backgroundColor);
-        scene.fill(128, 0, 0);
-        scene.noStroke();
-        scene.rect(0, 0, 1000, 1000);
 
         // TODO Moving this to a function
         // TODO remove the nodes when they are not visible anymore.
@@ -39,7 +36,7 @@ public class TextSpawningNode extends Node {
         if(tweet != null) {
             tweet = tweets.remove();
 
-            Node transformationNode =  new TransformationNode();
+            Node transformationNode =  new TransformationNode(0, -1000);
 
             Node animationNode = new DrawingNode(scene1 -> {
                 Ani.to(transformationNode, 20, "y", 4000);

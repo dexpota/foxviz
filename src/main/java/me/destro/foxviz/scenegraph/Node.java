@@ -8,12 +8,13 @@ import remixlab.proscene.Scene;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class Node implements Iterable<Node> {
-    List<Node> nodes;
+    LinkedBlockingQueue<Node> nodes;
 
     public Node() {
-        this.nodes = new LinkedList<>();
+        this.nodes = new LinkedBlockingQueue<>();
     }
 
     public void addNode(Node node) {

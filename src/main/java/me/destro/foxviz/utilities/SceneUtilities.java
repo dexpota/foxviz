@@ -1,11 +1,10 @@
 package me.destro.foxviz.utilities;
 
-import com.github.javafaker.Faker;
 import me.destro.foxviz.Configuration;
 import me.destro.foxviz.Main;
 import me.destro.foxviz.scenegraph.*;
+import me.destro.foxviz.scenes.ScreenTwoScene;
 import processing.core.PApplet;
-import remixlab.dandelion.geom.Frame;
 import remixlab.proscene.Scene;
 
 import java.util.ArrayList;
@@ -41,17 +40,7 @@ public class SceneUtilities {
         root.addNode(root_drawing);
 
         Node screen1 = buildFirstScreen();
-
-        Node screen2 = new TransformationNode(2000, 0);
-        Node screen2_drawing = new DrawingNode(scene -> {
-            scene.fill(128, 0, 0);
-            scene.noStroke();
-            scene.rect(0, 0, 1000, 1000);
-        });
-
-        screen2.appendNode(new ClipNode((float) (2000.f/Main.arguments.pixelSize), 0,
-                (float) (2000.f/Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
-                .appendNode(screen2_drawing);
+        Node screen2 = buildSecondScreen();
 
         Node screen3 = new TransformationNode(4000, 0);
         Node screen3_drawing = new DrawingNode( scene -> {
@@ -92,5 +81,16 @@ public class SceneUtilities {
         root.addNode(left);
         root.addNode(right);
         return root;
+    }
+
+    private static Node buildSecondScreen() {
+        Node screen2 = new TransformationNode(2000, 0);
+
+        screen2.appendNode(new ClipNode((float) (2000.f/ Main.arguments.pixelSize), 0,
+                (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
+                .appendNode(new DrawingNode(scene -> scene.background(Configuration.backgroundColor)))
+                .appendNode(new ScreenTwoScene());
+
+        return screen2;
     }
 }
