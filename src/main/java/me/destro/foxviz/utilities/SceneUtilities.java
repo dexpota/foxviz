@@ -72,10 +72,10 @@ public class SceneUtilities {
     private static Node buildSecondScreen() {
         Node screen2 = new TransformationNode(2000, 0);
 
-        /*screen2.appendNode(new ClipNode((float) (2000.f/ Main.arguments.pixelSize), 0,
+        screen2.appendNode(new ClipNode((float) (2000.f/ Main.arguments.pixelSize), 0,
                 (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
                 .appendNode(new DrawingNode(scene -> scene.background(Configuration.backgroundColor)))
-                .appendNode(new ScreenTwoScene());*/
+                .appendNode(new ScreenTwoScene());
 
         return screen2;
     }
