@@ -2,12 +2,19 @@ package me.destro.foxviz.utilities;
 
 import processing.core.PApplet;
 import remixlab.dandelion.geom.Frame;
+import remixlab.dandelion.geom.Point;
 import remixlab.dandelion.geom.Quat;
 
 import java.util.Random;
 
 public final class MathUtilities {
     private static Random randomGenerator;
+
+    public static Point polarToCartesian(double radius, double angle) {
+        Point p = new Point();
+        p.set((float) (radius * Math.cos(angle)), (float) (radius * Math.sin(angle)));
+        return p;
+    }
 
     public static double[] linspace(double min, double max, int points) {
         double[] d = new double[points];
