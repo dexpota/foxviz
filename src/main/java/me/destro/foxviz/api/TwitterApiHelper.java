@@ -23,8 +23,17 @@ public class TwitterApiHelper {
 
     private Tweet generateFake() {
         Tweet t = new Tweet();
-        int r = MathUtilities.random(10, 256);
-        t.text = faker.lorem().fixedString(r);
+
+
+        int num = MathUtilities.random(1, 5);
+
+        String text = "";
+        for (int i=0; i<num; ++i) {
+            int r = MathUtilities.random(10, 256);
+            text += faker.lorem().fixedString(r) + "\n\n\n";
+        }
+
+        t.text = text;
         return t;
     }
 }

@@ -44,14 +44,21 @@ public class ScreenTwoScene extends Node {
             if (canPulse) {
                 canPulse = false;
 
-                Ani scalingX = new Ani(transformationNode, 2, 0.5f, "sx", 1.0f, Ani.EXPO_IN_OUT);
-                Ani scalingY = new Ani(transformationNode, 2, 0.5f, "sy", 1.0f, Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
+                //Ani scalingX = new Ani(transformationNode, 2, 0.5f, "sx", 1.0f, Ani.EXPO_IN_OUT);
+                //Ani scalingY = new Ani(transformationNode, 2, 0.5f, "sy", 1.0f, Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
+
+                Ani[] anis = Ani.to(transformationNode, 2, String.format("sx:%f,sy:%f", 1.0f, 1.0f), Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
+                anis[0].setPlayMode(Ani.YOYO);
+                anis[1].setPlayMode(Ani.YOYO);
+                anis[0].repeat(2);
+                anis[1].repeat(2);
                 // repeat yoyo style (go up and down)
-                scalingX.setPlayMode(Ani.YOYO);
+                /*scalingX.setPlayMode(Ani.YOYO);
                 scalingY.setPlayMode(Ani.YOYO);
-                // repeat 3 times
                 scalingX.repeat(2);
                 scalingY.repeat(2);
+                scalingX.start();
+                scalingY.start();*/
             }
         }
 

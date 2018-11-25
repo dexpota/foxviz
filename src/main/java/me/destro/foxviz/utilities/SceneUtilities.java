@@ -6,6 +6,7 @@ import me.destro.foxviz.scenegraph.*;
 import me.destro.foxviz.scenes.ScreenThreeScene;
 import me.destro.foxviz.scenes.ScreenTwoScene;
 import processing.core.PApplet;
+import processing.core.PFont;
 import remixlab.proscene.Scene;
 
 import java.util.ArrayList;
@@ -37,7 +38,11 @@ public class SceneUtilities {
     public static Node buildScene() {
         float scale = (float) (1.0/ Main.arguments.pixelSize);
         Node root = new TransformationNode(0, 0, 0, scale, scale);
-        Node root_drawing = new DrawingNode(scene -> scene.background(Configuration.backgroundColor));
+        Node root_drawing = new DrawingNode(scene -> {
+            PFont mono = scene.createFont(Configuration.fontName, 20, true);
+            scene.textFont(mono);
+            scene.background(Configuration.backgroundColor);
+        });
         root.addNode(root_drawing);
 
         Node screen1 = buildFirstScreen();
@@ -85,7 +90,10 @@ public class SceneUtilities {
 
         screen3.appendNode(new ClipNode((float) (4000.f/ Main.arguments.pixelSize), 0,
                 (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
-                .appendNode(new DrawingNode(scene -> scene.background(Configuration.backgroundColor)))
+                .appendNode(new DrawingNode(
+                        scene -> {
+                            scene.background(Configuration.backgroundColor);
+                        }))
                 .appendNode(new ScreenThreeScene());
 
         return screen3;

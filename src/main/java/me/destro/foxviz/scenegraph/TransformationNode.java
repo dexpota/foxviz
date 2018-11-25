@@ -12,6 +12,8 @@ public class TransformationNode extends Node {
 
     public TransformationNode(float x, float y) {this(x, y, 0.f, 1.f, 1.f);}
 
+    public TransformationNode(float x, float y, float angle) {this(x, y, angle, 1.f, 1.f);}
+
     public TransformationNode(float x, float y, float angle, float sx, float sy) {
         this.x = x;
         this.y = y;

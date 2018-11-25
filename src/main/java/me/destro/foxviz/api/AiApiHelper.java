@@ -19,7 +19,6 @@ public class AiApiHelper {
         generateConnection()
                 .subscribeOn(Schedulers.computation())
                 .subscribe(connection -> {
-                    System.out.println("Here");
                     DataStorage.tablesConnections.add(connection);
                 });
     }
@@ -36,7 +35,7 @@ public class AiApiHelper {
     public Observable<Connection> generateConnection() {
         return Observable.create(emitter -> {
             while (true) {
-                Thread.sleep(1000 * MathUtilities.random(1, 2));
+                Thread.sleep(10 * MathUtilities.random(1, 2));
                 int a = MathUtilities.random(0, 64);
                 int b = MathUtilities.random(0, 64);
                 Connection c = new Connection();

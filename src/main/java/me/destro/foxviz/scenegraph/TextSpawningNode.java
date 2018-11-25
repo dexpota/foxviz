@@ -35,9 +35,9 @@ public class TextSpawningNode extends Node {
 
             Node transformationNode =  new TransformationNode(0, -1000);
 
-            Ani.to(transformationNode, 20, "y", 4100);
+            Ani.to(transformationNode, 90, "y", 4100);
 
-            Node textNode = new TextNode(tweet);
+            Node textNode = new TextNode(tweet, Configuration.firstColumnTextSize);
 
             this.appendNode(transformationNode).appendNode(textNode);
         }
