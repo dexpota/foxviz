@@ -2,6 +2,8 @@ package me.destro.foxviz.api;
 
 import com.github.javafaker.Faker;
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+import me.destro.foxviz.DataStorage;
 import me.destro.foxviz.model.AiWord;
 import me.destro.foxviz.model.Connection;
 import me.destro.foxviz.model.Tweet;
@@ -13,6 +15,13 @@ public class AiApiHelper {
 
     public AiApiHelper() {
         this.faker = new Faker();
+
+        generateConnection()
+                .subscribeOn(Schedulers.computation())
+                .subscribe(connection -> {
+                    System.out.println("Here");
+                    DataStorage.tablesConnections.add(connection);
+                });
     }
 
     public Observable<AiWord> generateWord() {
@@ -28,8 +37,8 @@ public class AiApiHelper {
         return Observable.create(emitter -> {
             while (true) {
                 Thread.sleep(1000 * MathUtilities.random(1, 2));
-                int a = MathUtilities.random(0, 9);
-                int b = MathUtilities.random(0, 9);
+                int a = MathUtilities.random(0, 64);
+                int b = MathUtilities.random(0, 64);
                 Connection c = new Connection();
                 c.a = a;
                 c.b = b;
