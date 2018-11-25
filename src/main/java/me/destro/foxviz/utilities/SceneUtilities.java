@@ -39,7 +39,7 @@ public class SceneUtilities {
         float scale = (float) (1.0/ Main.arguments.pixelSize);
         Node root = new TransformationNode(0, 0, 0, scale, scale);
         Node root_drawing = new DrawingNode(scene -> {
-            PFont mono = scene.createFont(Configuration.fontName, 20, true);
+            PFont mono = scene.createFont(Configuration.fontName, Configuration.fontSize);
             scene.textFont(mono);
             scene.background(Configuration.backgroundColor);
         });

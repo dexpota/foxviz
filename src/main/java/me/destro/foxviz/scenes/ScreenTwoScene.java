@@ -4,6 +4,7 @@ import de.looksgood.ani.Ani;
 import de.looksgood.ani.AniSequence;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import me.destro.foxviz.DataStorage;
 import me.destro.foxviz.Main;
 import me.destro.foxviz.model.AiWord;
 import me.destro.foxviz.scenegraph.DrawingNode;
@@ -13,6 +14,7 @@ import me.destro.foxviz.scenegraph.TransformationNode;
 import me.destro.foxviz.utilities.MathUtilities;
 import processing.core.PApplet;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,9 +77,6 @@ public class ScreenTwoScene extends Node {
     List<AiWordNode> nodes;
 
     public ScreenTwoScene() {
-        Disposable subscription = Main.ai.generateWord()
-                .subscribeOn(Schedulers.computation())
-                .subscribe(word -> onWordReceived(word));
         nodes = new ArrayList<>();
     }
 
@@ -104,5 +103,10 @@ public class ScreenTwoScene extends Node {
 
     @Override
     public void draw(PApplet scene) {
+        AiWord aiWord = DataStorage.fetchAiWord();
+
+        if (aiWord != null) {
+            onWordReceived(aiWord);
+        }
     }
 }

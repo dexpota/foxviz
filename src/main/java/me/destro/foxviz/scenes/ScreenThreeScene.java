@@ -70,7 +70,7 @@ public class ScreenThreeScene extends Node {
 
 
     public ScreenThreeScene() {
-        root = this.appendNode(new TransformationNode(1070, 1900));
+        root = this.appendNode(new TransformationNode(1070, 1880));
         DrawingNode d = new DrawingNode(scene -> {
             for (Connection c : connections) {
                 scene.noFill();
@@ -137,18 +137,18 @@ public class ScreenThreeScene extends Node {
 
         double[] arc_radius = {
                 1000*0.4175,
-                1000*0.4175*1.59,
-                1000*0.4175*2.19,
-                1000*0.4175*2.77,
-                1000*0.4175*3.35,
-                1000*0.4175*3.96,
+                1000*0.4175*1.59*1.05,
+                1000*0.4175*2.19*1.05,
+                1000*0.4175*2.77*1.05,
+                1000*0.4175*3.35*1.05,
+                1000*0.4175*3.96*1.05,
 
-                1000*0.4175*1.59,
-                1000*0.4175*2.19,
-                1000*0.4175*2.77,
-                1000*0.4175*3.35,
-                1000*0.4175*3.96,
-                1000*0.4175*4.58
+                1000*0.4175*1.59*1.05,
+                1000*0.4175*2.19*1.05,
+                1000*0.4175*2.77*1.05,
+                1000*0.4175*3.35*1.05,
+                1000*0.4175*3.96*1.05,
+                1000*0.4175*4.58*1.05
         };
 
         int id = 0;

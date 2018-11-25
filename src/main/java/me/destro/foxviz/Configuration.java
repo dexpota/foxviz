@@ -8,6 +8,8 @@ public final class Configuration {
     // TODO load configuration from ini file
     public static int backgroundColor;
 
+    public static int fontSize = 20;
+
     public static String fontName = "Space Mono";
 
     public static int firstColumnTextSize = 20;

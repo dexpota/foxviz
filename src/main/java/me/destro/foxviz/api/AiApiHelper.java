@@ -2,12 +2,16 @@ package me.destro.foxviz.api;
 
 import com.github.javafaker.Faker;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import me.destro.foxviz.DataStorage;
+import me.destro.foxviz.Main;
 import me.destro.foxviz.model.AiWord;
 import me.destro.foxviz.model.Connection;
 import me.destro.foxviz.model.Tweet;
 import me.destro.foxviz.utilities.MathUtilities;
+
+import javax.xml.crypto.Data;
 
 public class AiApiHelper {
     private Faker faker;
@@ -20,6 +24,12 @@ public class AiApiHelper {
                 .subscribeOn(Schedulers.computation())
                 .subscribe(connection -> {
                     DataStorage.tablesConnections.add(connection);
+                });
+
+        generateWord()
+                .subscribeOn(Schedulers.computation())
+                .subscribe(aiWord -> {
+                    DataStorage.smartWords.add(aiWord);
                 });
     }
 
