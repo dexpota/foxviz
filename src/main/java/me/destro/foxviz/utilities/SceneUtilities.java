@@ -54,7 +54,7 @@ public class SceneUtilities {
     private static Node buildFirstScreen() {
         Node root = new TransformationNode();
 
-        /*Node left = new TransformationNode();
+        Node left = new TransformationNode();
         left.appendNode(new ClipNode(0, 0,
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
                 .appendNode(new TextSpawningNode());
@@ -62,10 +62,10 @@ public class SceneUtilities {
         Node right = new TransformationNode(1000, 0);
         right.appendNode(new ClipNode((float) (1000.f/ Main.arguments.pixelSize), 0,
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
-                .appendNode(new TextSpawningNode());*/
+                .appendNode(new TextSpawningNode());
 
-        //root.addNode(left);
-        //root.addNode(right);
+        root.addNode(left);
+        root.addNode(right);
         return root;
     }
 

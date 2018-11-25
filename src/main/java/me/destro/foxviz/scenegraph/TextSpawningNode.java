@@ -22,7 +22,6 @@ public class TextSpawningNode extends Node {
                 .subscribe(tweet -> {
                     text = tweet.text;
                     tweets.add(text);
-                    System.out.println(String.format("Tweet: %s", tweet.text));
                 });
     }
 
@@ -30,22 +29,25 @@ public class TextSpawningNode extends Node {
     public void draw(PApplet scene) {
         scene.background(Configuration.backgroundColor);
 
-        // TODO Moving this to a function
-        // TODO remove the nodes when they are not visible anymore.
         String tweet = tweets.peek();
         if(tweet != null) {
             tweet = tweets.remove();
 
             Node transformationNode =  new TransformationNode(0, -1000);
 
-            Node animationNode = new DrawingNode(scene1 -> {
-                Ani.to(transformationNode, 20, "y", 4000);
-            });
+            Ani.to(transformationNode, 20, "y", 4100);
 
             Node textNode = new TextNode(tweet);
 
-            animationNode.appendNode(transformationNode).appendNode(textNode);
-            this.addNode(animationNode);
+            this.appendNode(transformationNode).appendNode(textNode);
+        }
+
+        for (Node n : nodes) {
+            if (n instanceof TransformationNode) {
+                if (((TransformationNode) n).y > 4050){
+                    this.removeNode(n);
+                }
+            }
         }
     }
 }
