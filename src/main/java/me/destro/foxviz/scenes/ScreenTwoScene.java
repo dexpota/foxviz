@@ -1,102 +1,130 @@
 package me.destro.foxviz.scenes;
 
-import de.looksgood.ani.Ani;
+import com.google.common.base.Stopwatch;
+import me.destro.foxviz.Configuration;
 import me.destro.foxviz.data.DataStorage;
-import me.destro.foxviz.model.AiWord;
+import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.scenegraph.Node;
-import me.destro.foxviz.scenegraph.TextNode;
 import me.destro.foxviz.utilities.MathUtilities;
+import me.destro.foxviz.utilities.Utilities;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 import processing.core.PApplet;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ScreenTwoScene extends Node {
+    Queue<TopWord> toInsertWords;
+    Queue<TopWord> toRemoveWords;
 
-    class AiWordNode extends Node {
-        Node textNode;
-        AiWord aiWord;
-        boolean canPulse = false;
+    List<TopWord> onScreen;
 
-        public AiWordNode(AiWord word) {
-            // TODO make this a configuration, spawning point
-            this.transformation.translate(1000, 2000);
-            aiWord = word;
+    Stopwatch insertionStopWatch = Stopwatch.createStarted();
+    int insertionWaitTime;
 
-            textNode = new TextNode(word.word);
-            this.addNode(textNode);
-        }
-
-        public void move(int target_x, int target_y) {
-            Ani.to(this.transformation, 5, "sx:0.2,sy:0.2", Ani.LINEAR);
-            Ani.to(this.transformation, 5, String.format("x:%s,y:%s", target_x, target_y), Ani.LINEAR, this, "onEnd:setCanPulse");
-        }
-
-        public void pulse() {
-            if (canPulse) {
-                canPulse = false;
-
-                //Ani scalingX = new Ani(transformationNode, 2, 0.5f, "sx", 1.0f, Ani.EXPO_IN_OUT);
-                //Ani scalingY = new Ani(transformationNode, 2, 0.5f, "sy", 1.0f, Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
-
-                Ani[] anis = Ani.to(this.transformation, 2, String.format("sx:%f,sy:%f", 1.0f, 1.0f), Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
-                anis[0].setPlayMode(Ani.YOYO);
-                anis[1].setPlayMode(Ani.YOYO);
-                anis[0].repeat(2);
-                anis[1].repeat(2);
-                // repeat yoyo style (go up and down)
-                /*scalingX.setPlayMode(Ani.YOYO);
-                scalingY.setPlayMode(Ani.YOYO);
-                scalingX.repeat(2);
-                scalingY.repeat(2);
-                scalingX.start();
-                scalingY.start();*/
-            }
-        }
-
-        public void setCanPulse() {
-            canPulse = true;
-        }
-
-        @Override
-        public void draw(PApplet scene) {
-
-        }
-    }
-
-    List<AiWordNode> nodes;
+    Stopwatch removingStopwatch = Stopwatch.createStarted();
+    int removingWaitTime;
 
     public ScreenTwoScene() {
-        nodes = new ArrayList<>();
-    }
+        toInsertWords = new CircularFifoQueue<>(Configuration.secondScreenMaxWords);
+        toRemoveWords = new CircularFifoQueue<>(Configuration.secondScreenMaxWords);
 
-    private void onWordReceived(AiWord word) {
-        int target_x = MathUtilities.random(0, 2000);
-        int target_y = MathUtilities.random(0, 4000);
+        onScreen = new LinkedList<>();
 
-        AiWordNode n = new AiWordNode(word);
-        n.move(target_x, target_y);
-        nodes.add(n);
-
-        pulseSameCategory(word.category);
-
-        this.addNode(n);
+        insertionWaitTime = MathUtilities.random(Configuration.secondScreenMinWaitTime, Configuration.secondScreenMaxWaitTime);
+        removingWaitTime = MathUtilities.random(Configuration.secondScreenMinWaitTime, Configuration.secondScreenMaxWaitTime);
     }
 
     private void pulseSameCategory(String category) {
-        for (AiWordNode node : nodes) {
-            if (node.aiWord.category.equals(category)) {
-                node.pulse();
+        for (Node n : this) {
+            if (n instanceof TopWordNode) {
+                TopWordNode node = (TopWordNode) n;
+                if (node.getTopWord().category.equals(category)) {
+                    node.pulse();
+                }
             }
         }
     }
 
     @Override
     public void draw(PApplet scene) {
-        AiWord aiWord = DataStorage.fetchAiWord();
 
-        if (aiWord != null) {
-            onWordReceived(aiWord);
+        if (DataStorage.isTop350Updated()) {
+            List<TopWord> topWords = DataStorage.getTop350Words();
+            updateQueues(topWords);
+        }
+
+        if (insertionStopWatch.elapsed(TimeUnit.SECONDS) > insertionWaitTime
+                && toInsertWords.peek() != null) {
+
+            generateWordOnScreen(toInsertWords.remove());
+            insertionStopWatch.stop();
+            insertionStopWatch.reset();
+            insertionStopWatch.start();
+        }
+
+        if (removingStopwatch.elapsed(TimeUnit.SECONDS) > removingWaitTime &&
+                toRemoveWords.peek() != null) {
+            removeWord(toRemoveWords.remove());
+            removingStopwatch.stop();
+            removingStopwatch.reset();
+            removingStopwatch.start();
+        }
+
+        // TODO if insertion queue is empty?
+        if (toInsertWords.isEmpty() && !onScreen.isEmpty()) {
+            TopWord topWord = onScreen.get(0);
+            toInsertWords.add(topWord);
+            toRemoveWords.add(topWord);
+        }
+
+        // TODO if we got too many words on screen what happen?
+    }
+
+    private void updateQueues(List<TopWord> topWords) {
+        // we clear the queue
+        toInsertWords.clear();
+        toRemoveWords.clear();
+
+        // Everytime we receive the top 350 words we have to check
+        // which ones of these words are already on screen? we are not going to insert these.
+        Collection<TopWord> newWordsToInsert
+                = Utilities.subtract(topWords, onScreen, Comparator.comparing(TopWord::getWord));
+
+        // add these words to the queue
+        toInsertWords.addAll(newWordsToInsert);
+
+        // which of the words on the screen are no longer on?
+        Collection<TopWord> newWordsToRemove
+                = Utilities.subtract(onScreen, topWords, Comparator.comparing(TopWord::getWord));
+
+        toRemoveWords.addAll(newWordsToRemove);
+    }
+
+    private void generateWordOnScreen(TopWord topWord) {
+        int target_x = MathUtilities.random(0, 2000);
+        int target_y = MathUtilities.random(0, 4000);
+
+        TopWordNode n = new TopWordNode(topWord);
+        n.move(target_x, target_y);
+
+        pulseSameCategory(topWord.category);
+
+        this.onScreen.add(topWord);
+        this.addNode(n);
+    }
+
+    private void removeWord(TopWord topWord) {
+        for (Node n : this) {
+            if (n instanceof TopWordNode) {
+                TopWordNode node = (TopWordNode) n;
+                if (node.getTopWord().word.equals(topWord.word)) {
+                    this.removeNode(node);
+                    this.onScreen.removeIf(nn -> nn.word.equals(topWord.word));
+                    return;
+                }
+            }
         }
     }
 }

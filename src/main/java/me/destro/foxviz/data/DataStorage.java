@@ -8,11 +8,25 @@ import me.destro.foxviz.utilities.MathUtilities;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DataStorage {
 
-    static public AtomicReference<List<TopWord>> top350Words = new AtomicReference<>(null);
+    static private AtomicReference<List<TopWord>> top350Words = new AtomicReference<>(null);
+    static private AtomicBoolean top350WordsUpdated = new AtomicBoolean(false);
+
+    static public boolean isTop350Updated() { return top350WordsUpdated.get(); }
+
+    static public List<TopWord> getTop350Words() {
+        top350WordsUpdated.set(false);
+        return top350Words.get();
+    }
+
+    static public void setTop350Words(List<TopWord> value){
+        top350Words.set(value);
+        top350WordsUpdated.set(true);
+    }
 
     static public ConcurrentLinkedQueue<Connection> tablesConnections = new ConcurrentLinkedQueue<>();
 

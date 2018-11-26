@@ -10,11 +10,13 @@ import me.destro.foxviz.cli.Arguments;
 import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.data.model.TopWord.TopWordAdapter;
 import me.destro.foxviz.utilities.ArgumentsUtilities;
+import me.destro.foxviz.utilities.Utilities;
 import okhttp3.OkHttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import processing.core.PApplet;
 
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -30,12 +32,6 @@ public class Main extends PApplet {
 
         api = new TwitterApiHelper();
         ai = new AiDataFetcher();
-
-        ai.fetchData()
-                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                .retry()
-                .subscribe(data -> DataStorage.top350Words.set(data.top350),
-                        error -> System.out.println("An error."));
 
         PApplet.main(ProcessingApplication.class, args);
     }

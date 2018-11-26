@@ -65,6 +65,11 @@ public final class MathUtilities {
         return values[index];
     }
 
+    public static String pickValue(String[] values) {
+        int index = random(0, values.length);
+        return values[index];
+    }
+
     public static Color pickValue(Color[] values) {
         int index = random(0, values.length);
         return values[index];

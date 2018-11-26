@@ -18,6 +18,9 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AiDataFetcher {
@@ -38,9 +41,13 @@ public class AiDataFetcher {
 
         generateWord()
                 .subscribeOn(Schedulers.computation())
-                .subscribe(aiWord -> {
-                    DataStorage.smartWords.add(aiWord);
-                });
+                .subscribe(DataStorage::setTop350Words);
+
+        /*fetchData()
+                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                .retry()
+                .subscribe(data -> DataStorage.setTop350Words(data.top350),
+                        error -> System.out.println("An error."));*/
     }
 
     public Observable<AiData> fetchData() {
@@ -91,14 +98,10 @@ public class AiDataFetcher {
         }
     }
 
-    public Observable<AiWord> generateWord() {
-
-        Observable<Long> interval = Observable.interval(0, 2, TimeUnit.SECONDS);
+    public Observable<List<TopWord>> generateWord() {
         return Observable.create(emitter -> {
-            while (true) {
-                Thread.sleep(1000 * MathUtilities.random(1, 2));
-                emitter.onNext(generateFake());
-            }
+            emitter.onNext(generateFake());
+            emitter.onComplete();
         });
     }
 
@@ -116,14 +119,17 @@ public class AiDataFetcher {
         });
     }
 
-    private AiWord generateFake() {
-        int index = MathUtilities.random(0, 3);
-        String word = faker.lorem().word();
-        String category = categories[index];
-        AiWord aiWord = new AiWord();
-        aiWord.word = word;
-        aiWord.category = category;
-        return aiWord;
+    private List<TopWord> generateFake() {
+        int n = MathUtilities.random(0, 60);
+        List<TopWord> topWords = new ArrayList<>(n);
+
+        for (int i = 0; i < n; ++i) {
+            String word = faker.lorem().word();
+            String category = MathUtilities.pickValue(categories);
+            topWords.add(new TopWord(word, category, 0));
+        }
+
+        return topWords;
     }
 
     class AiDataParsingException extends Exception {
