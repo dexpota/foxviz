@@ -33,6 +33,10 @@ public final class Configuration {
     public static int secondScreenMinWaitTime = 1;
     public static int secondScreenMaxWaitTime = 1;
 
+    public static float firstScreenTextHeight = 1000.0f;
+    public static int firstScreenMinWaitTime = 1;
+    public static int firstScreenMaxWaitTime = 5;
+
     static {
         backgroundColor = unhex("FF171717");
     }

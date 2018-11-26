@@ -116,15 +116,9 @@ public class ScreenTwoScene extends Node {
     }
 
     private void removeWord(TopWord topWord) {
-        for (Node n : this) {
-            if (n instanceof TopWordNode) {
-                TopWordNode node = (TopWordNode) n;
-                if (node.getTopWord().word.equals(topWord.word)) {
-                    this.removeNode(node);
-                    this.onScreen.removeIf(nn -> nn.word.equals(topWord.word));
-                    return;
-                }
-            }
+        if (removeNodeIf(node -> node instanceof TopWordNode
+                && ((TopWordNode) node).getTopWord().word.equals(topWord.word))) {
+            onScreen.removeIf(nn -> nn.word.equals(topWord.word));
         }
     }
 }

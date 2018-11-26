@@ -38,6 +38,14 @@ public class TransformationComponent {
         return this;
     }
 
+    public float x() {
+        return x;
+    }
+
+    public float y() {
+        return y;
+    }
+
     public void apply(PApplet scene) {
         scene.translate(x, y);
         scene.rotate(angle);

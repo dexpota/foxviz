@@ -5,6 +5,7 @@ import me.destro.foxviz.Main;
 import me.destro.foxviz.scenegraph.*;
 import me.destro.foxviz.scenes.ScreenThreeScene;
 import me.destro.foxviz.scenes.ScreenTwoScene;
+import me.destro.foxviz.scenes.TextSpawningNode;
 import processing.core.PApplet;
 import processing.core.PFont;
 import remixlab.proscene.Scene;
@@ -50,7 +51,7 @@ public class SceneUtilities {
         Node screen3 = buildThirdScreen();
 
         // TODO restore, now i work only on the second screen.
-        //root.addNode(screen1);
+        root.addNode(screen1);
         root.addNode(screen2);
         //root.addNode(screen3);
         return root;

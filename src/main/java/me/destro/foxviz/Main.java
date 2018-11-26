@@ -36,8 +36,7 @@ public class Main extends PApplet {
         phrasesDataFetcher = new PhrasesDataFetcher();
         ai = new AiDataFetcher();
 
-        while (true){}
-        //PApplet.main(ProcessingApplication.class, args);
+        PApplet.main(ProcessingApplication.class, args);
     }
 
 }

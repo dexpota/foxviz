@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Predicate;
 
 public abstract class Node implements Iterable<Node> {
     protected TransformationComponent transformation;
@@ -35,6 +36,10 @@ public abstract class Node implements Iterable<Node> {
         }
 
         return false;
+    }
+
+    public boolean removeNodeIf(Predicate<? super Node> predicate) {
+        return nodes.removeIf(predicate);
     }
 
     public Node appendNode(Node node) {

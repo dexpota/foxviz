@@ -6,6 +6,7 @@ import remixlab.dandelion.geom.Point;
 import remixlab.dandelion.geom.Quat;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Random;
 
 public final class MathUtilities {
@@ -73,6 +74,13 @@ public final class MathUtilities {
     public static Color pickValue(Color[] values) {
         int index = random(0, values.length);
         return values[index];
+    }
+
+    public static String pickValue(List<String> values) {
+        if (values.isEmpty())
+            return null;
+        int index = random(0, values.size());
+        return values.get(index);
     }
 
     public static Color generateRandomColor(Color mix) {
