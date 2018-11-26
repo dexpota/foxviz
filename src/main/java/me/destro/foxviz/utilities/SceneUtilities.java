@@ -37,37 +37,37 @@ public class SceneUtilities {
 
     public static Node buildScene() {
         float scale = (float) (1.0/ Main.arguments.pixelSize);
-        Node root = new TransformationNode(0, 0, 0, scale, scale);
-        Node root_drawing = new DrawingNode(scene -> {
+
+        Node root = new DrawingNode(scene -> {
             PFont mono = scene.createFont(Configuration.fontName, Configuration.fontSize);
             scene.textFont(mono);
             scene.background(Configuration.backgroundColor);
         });
-        root.addNode(root_drawing);
+        root.getTransformation().scale(scale);
 
         Node screen1 = buildFirstScreen();
         Node screen2 = buildSecondScreen();
         Node screen3 = buildThirdScreen();
 
-        root_drawing.addNode(screen1);
-        root_drawing.addNode(screen2);
-        root_drawing.addNode(screen3);
+        root.addNode(screen1);
+        root.addNode(screen2);
+        root.addNode(screen3);
         return root;
     }
 
 
     private static Node buildFirstScreen() {
-        Node root = new TransformationNode();
+        Node root = new DrawingNode(scene -> {});
 
-        Node left = new TransformationNode();
-        left.appendNode(new ClipNode(0, 0,
-                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
-                .appendNode(new TextSpawningNode());
+        Node left = new ClipNode(0, 0,
+                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
 
-        Node right = new TransformationNode(1000, 0);
-        right.appendNode(new ClipNode((float) (1000.f/ Main.arguments.pixelSize), 0,
-                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
-                .appendNode(new TextSpawningNode());
+        left.addNode(new TextSpawningNode());
+
+        Node right = new ClipNode((float) (1000.f/ Main.arguments.pixelSize), 0,
+                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
+        right.getTransformation().translate(1000, 0);
+        right.addNode(new TextSpawningNode());
 
         root.addNode(left);
         root.addNode(right);
@@ -75,25 +75,24 @@ public class SceneUtilities {
     }
 
     private static Node buildSecondScreen() {
-        Node screen2 = new TransformationNode(2000, 0);
+        Node screen2 = new ClipNode((float) (2000.f/ Main.arguments.pixelSize), 0,
+                (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
 
-        screen2.appendNode(new ClipNode((float) (2000.f/ Main.arguments.pixelSize), 0,
-                (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
-                .appendNode(new DrawingNode(scene -> scene.background(Configuration.backgroundColor)))
+        screen2.getTransformation().translate(2000, 0);
+
+        screen2.appendNode(new DrawingNode(scene -> scene.background(Configuration.backgroundColor)))
                 .appendNode(new ScreenTwoScene());
 
         return screen2;
     }
 
     private static Node buildThirdScreen() {
-        Node screen3 = new TransformationNode(4000, 0);
+        Node screen3 = new ClipNode((float) (4000.f/ Main.arguments.pixelSize), 0,
+                (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
 
-        screen3.appendNode(new ClipNode((float) (4000.f/ Main.arguments.pixelSize), 0,
-                (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize)))
-                .appendNode(new DrawingNode(
-                        scene -> {
-                            scene.background(Configuration.backgroundColor);
-                        }))
+        screen3.getTransformation().translate(4000, 0);
+
+        screen3.appendNode(new DrawingNode(scene -> scene.background(Configuration.backgroundColor)))
                 .appendNode(new ScreenThreeScene());
 
         return screen3;

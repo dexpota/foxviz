@@ -1,45 +1,36 @@
 package me.destro.foxviz.scenes;
 
 import de.looksgood.ani.Ani;
-import de.looksgood.ani.AniSequence;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import me.destro.foxviz.DataStorage;
-import me.destro.foxviz.Main;
 import me.destro.foxviz.model.AiWord;
-import me.destro.foxviz.scenegraph.DrawingNode;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
-import me.destro.foxviz.scenegraph.TransformationNode;
+import me.destro.foxviz.scenegraph.TransformationComponent;
 import me.destro.foxviz.utilities.MathUtilities;
 import processing.core.PApplet;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScreenTwoScene extends Node {
 
     class AiWordNode extends Node {
-        Node transformationNode;
         Node textNode;
         AiWord aiWord;
         boolean canPulse = false;
 
         public AiWordNode(AiWord word) {
-            transformationNode = new TransformationNode(1000, 2000);
-            textNode = new TextNode(word.word);
-
+            // TODO make this a configuration, spawning point
+            this.transformation.translate(1000, 2000);
             aiWord = word;
 
-            this.appendNode(transformationNode)
-                    .appendNode(textNode);
-
+            textNode = new TextNode(word.word);
+            this.addNode(textNode);
         }
 
         public void move(int target_x, int target_y) {
-            Ani.to(transformationNode, 5, "sx:0.2,sy:0.2", Ani.LINEAR);
-            Ani.to(transformationNode, 5, String.format("x:%s,y:%s", target_x, target_y), Ani.LINEAR, this, "onEnd:setCanPulse");
+            Ani.to(this.transformation, 5, "sx:0.2,sy:0.2", Ani.LINEAR);
+            Ani.to(this.transformation, 5, String.format("x:%s,y:%s", target_x, target_y), Ani.LINEAR, this, "onEnd:setCanPulse");
         }
 
         public void pulse() {
@@ -49,7 +40,7 @@ public class ScreenTwoScene extends Node {
                 //Ani scalingX = new Ani(transformationNode, 2, 0.5f, "sx", 1.0f, Ani.EXPO_IN_OUT);
                 //Ani scalingY = new Ani(transformationNode, 2, 0.5f, "sy", 1.0f, Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
 
-                Ani[] anis = Ani.to(transformationNode, 2, String.format("sx:%f,sy:%f", 1.0f, 1.0f), Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
+                Ani[] anis = Ani.to(this.transformation, 2, String.format("sx:%f,sy:%f", 1.0f, 1.0f), Ani.EXPO_IN_OUT, this, "onEnd:setCanPulse");
                 anis[0].setPlayMode(Ani.YOYO);
                 anis[1].setPlayMode(Ani.YOYO);
                 anis[0].repeat(2);

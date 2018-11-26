@@ -2,23 +2,17 @@ package me.destro.foxviz.scenes;
 
 
 import de.looksgood.ani.Ani;
-import io.reactivex.schedulers.Schedulers;
 import me.destro.foxviz.Configuration;
 import me.destro.foxviz.DataStorage;
-import me.destro.foxviz.Main;
-import me.destro.foxviz.model.Connection;
 import me.destro.foxviz.scenegraph.DrawingNode;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
-import me.destro.foxviz.scenegraph.TransformationNode;
+import me.destro.foxviz.scenegraph.TransformationComponent;
 import me.destro.foxviz.utilities.MathUtilities;
 import processing.core.PApplet;
-import remixlab.dandelion.geom.Mat;
 import remixlab.dandelion.geom.Point;
 
-import javax.xml.crypto.Data;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -26,41 +20,38 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import static processing.core.PApplet.unhex;
 
 public class ScreenThreeScene extends Node {
-    Node root;
     List<Table> tables;
-    ConcurrentLinkedQueue<Connection> connections;
+    List<Connection> connections;
 
     public class Table extends Node {
         int size = 100;
         private int color;
         public int id;
         public Point point;
-        private TransformationNode transformationNode;
 
         public Table(int id, Point p) {
             color = unhex("FF40a361");
             this.id = id;
-            transformationNode = new TransformationNode();
             this.point = p;
-            this.appendNode(transformationNode)
-                    .appendNode(new TransformationNode(p.x(), p.y()))
-                    .appendNode(new DrawingNode(scene -> {
-                        scene.stroke(255);
-                        scene.strokeWeight(3);
-                        scene.fill(Configuration.backgroundColor);
-                        scene.ellipse(0, 0, size, size);
 
-                        scene.fill(255);
-                        scene.noStroke();
-                        scene.ellipse(0, 0, 20, 20);
-                    }))
-                    .appendNode(new TransformationNode(-40, -50, (float) Math.toRadians(-45)))
-                    .appendNode(new TextNode(String.valueOf(this.id + 1)));
+            this.transformation = new TransformationComponent(p.x(), p.y());
+
+            Node label = new TextNode(String.valueOf(this.id + 1));
+            label.getTransformation().translate(-40, -50).rotate((float) Math.toRadians(-45));
+
+            this.addNode(label);
         }
 
         @Override
         public void draw(PApplet scene) {
+            scene.stroke(255);
+            scene.strokeWeight(3);
+            scene.fill(Configuration.backgroundColor);
+            scene.ellipse(0, 0, size, size);
 
+            scene.fill(255);
+            scene.noStroke();
+            scene.ellipse(0, 0, 20, 20);
         }
 
         public Point getPosition() {
@@ -70,37 +61,12 @@ public class ScreenThreeScene extends Node {
 
 
     public ScreenThreeScene() {
-        root = this.appendNode(new TransformationNode(1070, 1880));
-        DrawingNode d = new DrawingNode(scene -> {
-            for (Connection c : connections) {
-                scene.noFill();
-                scene.strokeWeight(3);
-                scene.stroke(c.color.getRed(), c.color.getGreen(), c.color.getBlue(), c.alpha);
-
-                Point start = new Point(c.p1);
-                Point end = new Point(c.x, c.y);
-
-                Point v = new Point(end.x() - start.x(), end.y() - start.y());
-
-                Point v1 = MathUtilities.rotateVector(v, Math.toRadians(c.angle1));
-
-                Point vv = new Point(-v.x(), -v.y());
-                Point v2 = MathUtilities.rotateVector(vv, Math.toRadians(-c.angle1));
-
-                scene.bezier(c.p1.x(), c.p1.y(),
-                        c.p1.x() + v1.x()*c.f1, c.p1.y() + v1.y()*c.f1,
-                        c.x + v2.x()*c.f1, c.y + v2.y()*c.f1,
-                        c.x, c.y);
-
-                //scene.line(, c.p1.y(), c.x, c.y);
-            }
-        });
-
-        this.appendNode(root).appendNode(d);
+        // TODO make a configuration value
+        this.transformation = new TransformationComponent(1070, 1880);
 
         tables = new LinkedList<>();
-        generateTables(root);
-        this.connections = new ConcurrentLinkedQueue<>();
+        this.connections = new LinkedList<>();
+        generateTables();
     }
 
     class Connection {
@@ -115,10 +81,7 @@ public class ScreenThreeScene extends Node {
         float angle2 = 0.0f;
     }
 
-    private void generateTables(Node root){
-        //double[] xs = MathUtilities.linspace(0, w, count);
-        //double[] ys = MathUtilities.linspace(0, h, count);
-
+    private void generateTables(){
         double[][] arc_angles = {
                 MathUtilities.linspace(0, 2 * Math.PI, 11),
                 MathUtilities.linspace(Math.toRadians(-33), Math.toRadians(-180+33), 6),
@@ -160,7 +123,7 @@ public class ScreenThreeScene extends Node {
             for (double angle : angles) {
                 Point p = MathUtilities.polarToCartesian(radius, angle);
                 Table t = new Table(id, p);
-                root.appendNode(t);
+                this.addNode(t);
                 tables.add(t);
                 id++;
             }
@@ -177,6 +140,35 @@ public class ScreenThreeScene extends Node {
 
     @Override
     public void draw(PApplet scene) {
+        drawConnections(scene);
+        update();
+    }
+
+    private void drawConnections(PApplet scene) {
+        for (Connection c : connections) {
+            scene.noFill();
+            scene.strokeWeight(3);
+            scene.stroke(c.color.getRed(), c.color.getGreen(), c.color.getBlue(), c.alpha);
+
+            Point start = new Point(c.p1);
+            Point end = new Point(c.x, c.y);
+
+            Point v = new Point(end.x() - start.x(), end.y() - start.y());
+
+            Point v1 = MathUtilities.rotateVector(v, Math.toRadians(c.angle1));
+
+            Point vv = new Point(-v.x(), -v.y());
+            Point v2 = MathUtilities.rotateVector(vv, Math.toRadians(-c.angle1));
+
+            scene.bezier(c.p1.x(), c.p1.y(),
+                    c.p1.x() + v1.x()*c.f1, c.p1.y() + v1.y()*c.f1,
+                    c.x + v2.x()*c.f1, c.y + v2.y()*c.f1,
+                    c.x, c.y);
+        }
+    }
+
+
+    private void update() {
         List<me.destro.foxviz.model.Connection> connections = DataStorage.fetchConnection();
 
         if (connections == null)

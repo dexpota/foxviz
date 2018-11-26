@@ -6,7 +6,6 @@ import io.reactivex.schedulers.Schedulers;
 import me.destro.foxviz.Configuration;
 import me.destro.foxviz.Main;
 import processing.core.PApplet;
-import remixlab.dandelion.geom.Frame;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -33,18 +32,18 @@ public class TextSpawningNode extends Node {
         if(tweet != null) {
             tweet = tweets.remove();
 
-            Node transformationNode =  new TransformationNode(0, -1000);
-
-            Ani.to(transformationNode, 90, "y", 4200);
-
             Node textNode = new TextNode(tweet, Configuration.firstColumnTextSize);
+            // TODO make this a configuration, spawning point
+            textNode.getTransformation().translate(0, -1000);
 
-            this.appendNode(transformationNode).appendNode(textNode);
+            Ani.to(textNode.getTransformation(), 90, "y", 4200);
+
+            this.addNode(textNode);
         }
 
         for (Node n : nodes) {
-            if (n instanceof TransformationNode) {
-                if (((TransformationNode) n).y > 4150){
+            if (n instanceof TextNode) {
+                if (((TextNode) n).getTransformation().x > 4150){
                     this.removeNode(n);
                 }
             }

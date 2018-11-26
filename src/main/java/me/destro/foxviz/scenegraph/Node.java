@@ -1,20 +1,25 @@
 package me.destro.foxviz.scenegraph;
-
-import me.destro.foxviz.utilities.MathUtilities;
 import processing.core.PApplet;
-import remixlab.dandelion.geom.Frame;
-import remixlab.proscene.Scene;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class Node implements Iterable<Node> {
-    LinkedBlockingQueue<Node> nodes;
+    protected TransformationComponent transformation;
+    List<Node> nodes;
+
+    public TransformationComponent getTransformation() {
+        return transformation;
+    }
 
     public Node() {
-        this.nodes = new LinkedBlockingQueue<>();
+        this(new TransformationComponent());
+    }
+
+    public Node(TransformationComponent transformation) {
+        this.transformation = transformation;
+        this.nodes = new LinkedList<>();
     }
 
     public void addNode(Node node) {
