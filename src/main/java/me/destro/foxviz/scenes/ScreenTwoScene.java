@@ -2,6 +2,7 @@ package me.destro.foxviz.scenes;
 
 import com.google.common.base.Stopwatch;
 import me.destro.foxviz.Configuration;
+import me.destro.foxviz.Main;
 import me.destro.foxviz.data.DataStorage;
 import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.scenegraph.Node;
@@ -80,6 +81,20 @@ public class ScreenTwoScene extends Node {
         }
 
         // TODO if we got too many words on screen what happen?
+
+        // DEBUG
+        scene.pushMatrix();
+        scene.translate(1000, 1000);
+        scene.scale((float) Main.arguments.pixelSize);
+        scene.textSize(20.0f);
+        scene.fill(255);
+        scene.text(String.format("Sizes: %d %d %d %d",
+                onScreen.size(),
+                toInsertWords.size(),
+                toRemoveWords.size(),
+                childrenCount()), 0, 0);
+        scene.scale((float) (1.0f/Main.arguments.pixelSize));
+        scene.popMatrix();
     }
 
     private void updateQueues(List<TopWord> topWords) {

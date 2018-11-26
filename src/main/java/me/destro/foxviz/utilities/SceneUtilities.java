@@ -44,9 +44,9 @@ public class SceneUtilities {
         });
         root.getTransformation().scale(scale);
 
-        Node screen1 = buildFirstScreen();
+        //Node screen1 = buildFirstScreen();
         Node screen2 = buildSecondScreen();
-        Node screen3 = buildThirdScreen();
+        //Node screen3 = buildThirdScreen();
 
         // TODO restore, now i work only on the second screen.
         root.addNode(screen1);

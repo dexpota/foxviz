@@ -49,6 +49,10 @@ public abstract class Node implements Iterable<Node> {
         return node;
     }
 
+    public int childrenCount() {
+        return nodes.size();
+    }
+
     public abstract void draw(PApplet scene);
 
     @Override

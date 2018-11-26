@@ -33,13 +33,14 @@ public class AiDataFetcher {
     public AiDataFetcher() {
         this.faker = new Faker();
 
-        generateConnection()
+        /*generateConnection()
                 .subscribeOn(Schedulers.computation())
                 .subscribe(connection -> {
                     DataStorage.tablesConnections.add(connection);
-                });
+                });*/
 
         generateWord()
+                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
                 .subscribeOn(Schedulers.computation())
                 .subscribe(DataStorage::setTop350Words);
 
