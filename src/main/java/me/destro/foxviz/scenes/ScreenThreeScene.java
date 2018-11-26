@@ -3,8 +3,7 @@ package me.destro.foxviz.scenes;
 
 import de.looksgood.ani.Ani;
 import me.destro.foxviz.Configuration;
-import me.destro.foxviz.DataStorage;
-import me.destro.foxviz.scenegraph.DrawingNode;
+import me.destro.foxviz.data.DataStorage;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
 import me.destro.foxviz.scenegraph.TransformationComponent;
@@ -15,7 +14,6 @@ import remixlab.dandelion.geom.Point;
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static processing.core.PApplet.unhex;
 

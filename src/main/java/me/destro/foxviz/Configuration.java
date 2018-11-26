@@ -5,6 +5,11 @@ import java.awt.*;
 import static processing.core.PApplet.unhex;
 
 public final class Configuration {
+
+    // TODO insert a more appropriate time
+    public static int aiDataRepeatTime = 60;
+    public static String aiDataUrl = "https://www.visionarydays.it/viz/output_acorpo.json";
+
     // TODO load configuration from ini file
     public static int backgroundColor;
 

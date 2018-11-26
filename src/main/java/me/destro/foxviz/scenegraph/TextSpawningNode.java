@@ -48,5 +48,8 @@ public class TextSpawningNode extends Node {
                 }
             }
         }
+
+        //System.out.println(String.format("How many nodes: %d", this.nodes.size()));
+        //System.out.println(String.format("How many tweets: %d", this.nodes.size()));
     }
 }

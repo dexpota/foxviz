@@ -1,4 +1,4 @@
-package me.destro.foxviz.api;
+package me.destro.foxviz.data;
 
 import com.github.javafaker.Faker;
 import io.reactivex.Observable;

@@ -1,5 +1,6 @@
-package me.destro.foxviz;
+package me.destro.foxviz.data;
 
+import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.model.AiWord;
 import me.destro.foxviz.model.Connection;
 import me.destro.foxviz.utilities.MathUtilities;
@@ -7,8 +8,11 @@ import me.destro.foxviz.utilities.MathUtilities;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DataStorage {
+
+    static public AtomicReference<List<TopWord>> top350Words = new AtomicReference<>(null);
 
     static public ConcurrentLinkedQueue<Connection> tablesConnections = new ConcurrentLinkedQueue<>();
 
@@ -33,7 +37,6 @@ public class DataStorage {
                 return connections;
             }
         }
-
         return null;
     }
 

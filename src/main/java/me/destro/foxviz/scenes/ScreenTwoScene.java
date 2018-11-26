@@ -1,11 +1,10 @@
 package me.destro.foxviz.scenes;
 
 import de.looksgood.ani.Ani;
-import me.destro.foxviz.DataStorage;
+import me.destro.foxviz.data.DataStorage;
 import me.destro.foxviz.model.AiWord;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
-import me.destro.foxviz.scenegraph.TransformationComponent;
 import me.destro.foxviz.utilities.MathUtilities;
 import processing.core.PApplet;
 
