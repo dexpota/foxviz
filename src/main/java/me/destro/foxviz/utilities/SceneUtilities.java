@@ -44,7 +44,7 @@ public class SceneUtilities {
         });
         root.getTransformation().scale(scale);
 
-        //Node screen1 = buildFirstScreen();
+        Node screen1 = buildFirstScreen();
         Node screen2 = buildSecondScreen();
         //Node screen3 = buildThirdScreen();
 
