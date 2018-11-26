@@ -35,7 +35,7 @@ public class TextSpawningNode extends Node {
 
             Node transformationNode =  new TransformationNode(0, -1000);
 
-            Ani.to(transformationNode, 90, "y", 4100);
+            Ani.to(transformationNode, 90, "y", 4200);
 
             Node textNode = new TextNode(tweet, Configuration.firstColumnTextSize);
 
@@ -44,7 +44,7 @@ public class TextSpawningNode extends Node {
 
         for (Node n : nodes) {
             if (n instanceof TransformationNode) {
-                if (((TransformationNode) n).y > 4050){
+                if (((TransformationNode) n).y > 4150){
                     this.removeNode(n);
                 }
             }

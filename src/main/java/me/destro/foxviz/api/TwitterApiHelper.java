@@ -15,7 +15,7 @@ public class TwitterApiHelper {
     public Observable<Tweet> searchTweets() {
         return io.reactivex.Observable.create(emitter -> {
             while (true) {
-                Thread.sleep(1000 * MathUtilities.random(1, 6));
+                Thread.sleep(1000 * MathUtilities.random(1, 9));
                 emitter.onNext(generateFake());
             }
         });
@@ -25,7 +25,7 @@ public class TwitterApiHelper {
         Tweet t = new Tweet();
 
 
-        int num = MathUtilities.random(1, 5);
+        int num = MathUtilities.random(1, 1);
 
         String text = "";
         for (int i=0; i<num; ++i) {
