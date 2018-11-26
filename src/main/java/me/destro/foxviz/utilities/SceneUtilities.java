@@ -40,8 +40,6 @@ public class SceneUtilities {
         float scale = (float) (1.0/ Main.arguments.pixelSize);
 
         Node root = new DrawingNode(scene -> {
-            PFont mono = scene.createFont(Configuration.fontName, Configuration.fontSize);
-            scene.textFont(mono);
             scene.background(Configuration.backgroundColor);
         });
         root.getTransformation().scale(scale);

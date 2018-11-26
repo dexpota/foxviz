@@ -5,6 +5,7 @@ import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.NodeWalker;
 import me.destro.foxviz.utilities.SceneUtilities;
 import processing.core.PApplet;
+import processing.core.PFont;
 
 public class ProcessingApplication extends PApplet {
     private boolean centered = false;
@@ -21,6 +22,9 @@ public class ProcessingApplication extends PApplet {
         super.setup();
         Ani.init(this);
         root = SceneUtilities.buildScene();
+
+        PFont mono = createFont(Configuration.fontName, Configuration.fontSize);
+        textFont(mono);
     }
 
     @Override
