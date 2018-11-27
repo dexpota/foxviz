@@ -88,11 +88,11 @@ public class ScreenTwoScene extends Node {
         scene.scale((float) Main.arguments.pixelSize);
         scene.textSize(20.0f);
         scene.fill(255);
-        scene.text(String.format("Sizes: %d %d %d %d",
+        /*scene.text(String.format("Sizes: %d %d %d %d",
                 onScreen.size(),
                 toInsertWords.size(),
                 toRemoveWords.size(),
-                childrenCount()), 0, 0);
+                childrenCount()), 0, 0);*/
         scene.scale((float) (1.0f/Main.arguments.pixelSize));
         scene.popMatrix();
     }

@@ -1,8 +1,10 @@
 package me.destro.foxviz.data;
 
+import com.github.javafaker.Faker;
 import io.reactivex.Observable;
 import me.destro.foxviz.Configuration;
 import me.destro.foxviz.Main;
+import me.destro.foxviz.utilities.MathUtilities;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -18,11 +20,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PhrasesDataFetcher {
-
+    private Faker faker;
     private static Marker marker = MarkerManager.getMarker(PhrasesDataFetcher.class.getName());
 
     public PhrasesDataFetcher() {
-        fetchData()
+        faker = new Faker();
+
+        fetchFakeData()
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
                 .retry()
                 .subscribe(PhrasesDataStorage::set,
@@ -35,7 +39,7 @@ public class PhrasesDataFetcher {
             Request request = new Request.Builder()
                     .url(Configuration.phrasesDataUrl)
                     .build();
-            System.out.println("Here");
+
             Response response;
             try {
                 Main.logger.debug(marker,
@@ -65,6 +69,23 @@ public class PhrasesDataFetcher {
                         String.format("Message: %s.", e.getMessage()));
                 emitter.onError(e);
             }
+        });
+    }
+
+    public Observable<List<String>> fetchFakeData() {
+        return Observable.create(emitter -> {
+            List<String> phrases = new LinkedList<>();
+
+            int num = MathUtilities.random(1, 10);
+            String text = "";
+            for (int i=0; i<num; ++i) {
+                int r = MathUtilities.random(10, 256);
+                text += faker.lorem().fixedString(r);
+                phrases.add(text);
+            }
+
+            emitter.onNext(phrases);
+            emitter.onComplete();
         });
     }
 

@@ -46,11 +46,11 @@ public class SceneUtilities {
 
         Node screen1 = buildFirstScreen();
         Node screen2 = buildSecondScreen();
-        //Node screen3 = buildThirdScreen();
+        Node screen3 = buildThirdScreen();
 
         // TODO restore, now i work only on the second screen.
-        //root.addNode(screen1);
-        //root.addNode(screen2);
+        root.addNode(screen1);
+        root.addNode(screen2);
         root.addNode(screen3);
         return root;
     }
