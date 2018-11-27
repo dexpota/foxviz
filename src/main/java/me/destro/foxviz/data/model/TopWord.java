@@ -24,9 +24,10 @@ public class TopWord{
             reader.beginArray();
             String word = reader.nextString();
             int frequency = reader.nextInt();
-            String category = reader.nextString();
+            // TODO restore this line when the data will be avaialable
+            //String category = reader.nextString();
             reader.endArray();
-            return new TopWord(word, category, frequency);
+            return new TopWord(word, "categoria", frequency);
         }
     }
 }

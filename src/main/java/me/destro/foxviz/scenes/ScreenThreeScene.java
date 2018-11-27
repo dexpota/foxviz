@@ -1,25 +1,39 @@
 package me.destro.foxviz.scenes;
 
 
+import com.google.common.base.Stopwatch;
 import de.looksgood.ani.Ani;
 import me.destro.foxviz.Configuration;
-import me.destro.foxviz.data.DataStorage;
+import me.destro.foxviz.data.AiDataStorage;
+import me.destro.foxviz.model.TableConnection;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
 import me.destro.foxviz.scenegraph.TransformationComponent;
 import me.destro.foxviz.utilities.MathUtilities;
+import org.apache.commons.collections4.CollectionUtils;
 import processing.core.PApplet;
 import remixlab.dandelion.geom.Point;
 
 import java.awt.*;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static processing.core.PApplet.unhex;
 
 public class ScreenThreeScene extends Node {
+    Queue<TableConnection> toInsertConnections = new LinkedList<>();
+    Queue<TableConnection> toRemoveConnections = new LinkedList<>();
+
+    List<TableConnection> onScreen;
+
+    Stopwatch insertionStopWatch = Stopwatch.createStarted();
+    int insertionWaitTime;
+
+    Stopwatch removingStopwatch = Stopwatch.createStarted();
+    int removingWaitTime;
+
     List<Table> tables;
-    List<Connection> connections;
 
     public class Table extends Node {
         int size = 100;
@@ -60,14 +74,29 @@ public class ScreenThreeScene extends Node {
 
     public ScreenThreeScene() {
         // TODO make a configuration value
-        this.transformation = new TransformationComponent(1070, 1880);
+        transformation = new TransformationComponent(1070, 1880);
+
+        insertionWaitTime = MathUtilities.random(Configuration.thirdScreenMinWaitTime, Configuration.thirdScreenMaxWaitTime);
+        removingWaitTime = MathUtilities.random(Configuration.thirdScreenMinWaitTime, Configuration.thirdScreenMaxWaitTime);
+
+        onScreen = new LinkedList<>();
 
         tables = new LinkedList<>();
-        this.connections = new LinkedList<>();
         generateTables();
     }
 
-    class Connection {
+    class ConnectionNode extends Node {
+
+        public ConnectionNode(TableConnection c) {
+            this.c = c;
+        }
+
+        public TableConnection getConnection() {
+            return c;
+        }
+
+        TableConnection c;
+
         public Point p1;
         public float x, y;
         public float alpha = 0.0f;
@@ -77,6 +106,28 @@ public class ScreenThreeScene extends Node {
         float angle1 = 0.0f;
         float f2 = 0.0f;
         float angle2 = 0.0f;
+
+        @Override
+        public void draw(PApplet scene) {
+            scene.noFill();
+            scene.strokeWeight(3);
+            scene.stroke(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+
+            Point start = new Point(p1);
+            Point end = new Point(x, y);
+
+            Point v = new Point(end.x() - start.x(), end.y() - start.y());
+
+            Point v1 = MathUtilities.rotateVector(v, Math.toRadians(angle1));
+
+            Point vv = new Point(-v.x(), -v.y());
+            Point v2 = MathUtilities.rotateVector(vv, Math.toRadians(-angle1));
+
+            scene.bezier(p1.x(), p1.y(),
+                    p1.x() + v1.x()*f1, p1.y() + v1.y()*f1,
+                    x + v2.x()*f1, y + v2.y()*f1,
+                    x, y);
+        }
     }
 
     private void generateTables(){
@@ -138,74 +189,95 @@ public class ScreenThreeScene extends Node {
 
     @Override
     public void draw(PApplet scene) {
-        drawConnections(scene);
         update();
     }
 
-    private void drawConnections(PApplet scene) {
-        for (Connection c : connections) {
-            scene.noFill();
-            scene.strokeWeight(3);
-            scene.stroke(c.color.getRed(), c.color.getGreen(), c.color.getBlue(), c.alpha);
-
-            Point start = new Point(c.p1);
-            Point end = new Point(c.x, c.y);
-
-            Point v = new Point(end.x() - start.x(), end.y() - start.y());
-
-            Point v1 = MathUtilities.rotateVector(v, Math.toRadians(c.angle1));
-
-            Point vv = new Point(-v.x(), -v.y());
-            Point v2 = MathUtilities.rotateVector(vv, Math.toRadians(-c.angle1));
-
-            scene.bezier(c.p1.x(), c.p1.y(),
-                    c.p1.x() + v1.x()*c.f1, c.p1.y() + v1.y()*c.f1,
-                    c.x + v2.x()*c.f1, c.y + v2.y()*c.f1,
-                    c.x, c.y);
-        }
-    }
-
-
     private void update() {
-        List<me.destro.foxviz.model.Connection> connections = DataStorage.fetchConnection();
+        if (AiDataStorage.areConnectionsUpdated()) {
+            Set<TableConnection> connections = AiDataStorage.getWordsConnections();
+            updateQueues(connections);
+        }
 
-        if (connections == null)
-            return;
 
-        for (me.destro.foxviz.model.Connection c : connections) {
-            if (c != null) {
-                Table t1 = getTable(c.a);
-                Table t2 = getTable(c.b);
-                Point p1 = t1.getPosition();
-                Point p2 = t2.getPosition();
+        if (insertionStopWatch.elapsed(TimeUnit.SECONDS) > insertionWaitTime
+                && toInsertConnections.peek() != null) {
 
-                Connection c1 = new Connection();
-                c1.p1 = p1;
-                c1.x = p1.x();
-                c1.y = p1.y();
+            generateConnectionOnScreen(toInsertConnections.remove());
+            insertionStopWatch.stop();
+            insertionStopWatch.reset();
+            insertionStopWatch.start();
+        }
 
-                c1.color = MathUtilities.generateRandomColor(MathUtilities.pickValue(Configuration.basicConnectionColors));
+        if (removingStopwatch.elapsed(TimeUnit.SECONDS) > removingWaitTime &&
+                toRemoveConnections.peek() != null) {
+            removeConnection(toRemoveConnections.remove());
+            removingStopwatch.stop();
+            removingStopwatch.reset();
+            removingStopwatch.start();
+        }
 
-                c1.f1 = MathUtilities.randomFloat() * 0.25f + 0.25f;
-                c1.f2 = MathUtilities.randomFloat() * 0.25f + 0.25f;
+        // TODO if nothing happens
+        if (toInsertConnections.isEmpty() && !onScreen.isEmpty()) {
 
-                c1.angle1 = MathUtilities.randomFloat() * 30.0f + 15.0f;
-                c1.angle2 = MathUtilities.randomFloat() * 30.0f + 15.0f;
-
-                if (!this.connections.contains(c1)) {
-                    this.connections.add(c1);
-                    if (t1.size < 200)
-                        Ani.to(t1, 4.0f, "size", t1.size + 20, Ani.ELASTIC_IN_OUT);
-                    if (t2.size < 200)
-                        Ani.to(t2, 4.0f, "size", t2.size + 20, Ani.ELASTIC_IN_OUT);
-
-                    Ani.to(c1, 1.5f, "alpha", 255.0f, Ani.LINEAR);
-                    Ani.to(c1, 1.5f, String.format("x:%d,y:%d", p2.x(), p2.y()), Ani.CIRC_IN_OUT);
-                } else {
-                    System.out.println("already present.");
-                }
-
-            }
         }
     }
+
+    private void removeConnection(TableConnection connection) {
+        if (removeNodeIf(node -> node instanceof ConnectionNode
+                && ((ConnectionNode) node).getConnection().equals(connection))) {
+            onScreen.removeIf(nn -> nn.equals(connection));
+        }
+    }
+
+    private void updateQueues(Set<TableConnection> connections) {
+        toInsertConnections.clear();
+        toRemoveConnections.clear();
+
+        Collection<TableConnection> newConnectionsToInsert
+                = CollectionUtils.subtract(connections, onScreen);
+
+        // add these words to the queue
+        toInsertConnections.addAll(newConnectionsToInsert);
+
+        // which of the words on the screen are no longer on?
+        Collection<TableConnection> newToRemove
+                = CollectionUtils.subtract(onScreen, connections);
+
+        toRemoveConnections.addAll(newToRemove);
+    }
+
+    private void generateConnectionOnScreen(TableConnection connection) {
+        Table t1 = getTable(connection.a);
+        Table t2 = getTable(connection.b);
+
+        Point p1 = t1.getPosition();
+        Point p2 = t2.getPosition();
+
+        ConnectionNode c1 = new ConnectionNode(connection);
+        c1.p1 = p1;
+        c1.x = p1.x();
+        c1.y = p1.y();
+
+        c1.color = MathUtilities.generateRandomColor(MathUtilities.pickValue(Configuration.basicConnectionColors));
+
+        c1.f1 = MathUtilities.randomFloat() * 0.25f + 0.25f;
+        c1.f2 = MathUtilities.randomFloat() * 0.25f + 0.25f;
+
+        c1.angle1 = MathUtilities.randomFloat() * 30.0f + 15.0f;
+        c1.angle2 = MathUtilities.randomFloat() * 30.0f + 15.0f;
+
+        if (t1.size < 200)
+            Ani.to(t1, 4.0f, "size", t1.size + 20, Ani.ELASTIC_IN_OUT);
+        if (t2.size < 200)
+            Ani.to(t2, 4.0f, "size", t2.size + 20, Ani.ELASTIC_IN_OUT);
+
+        Ani.to(c1, 1.5f, "alpha", 255.0f, Ani.LINEAR);
+        Ani.to(c1, 1.5f, String.format("x:%d,y:%d", p2.x(), p2.y()), Ani.CIRC_IN_OUT);
+
+
+        onScreen.add(connection);
+        addNode(c1);
+    }
+
+
 }

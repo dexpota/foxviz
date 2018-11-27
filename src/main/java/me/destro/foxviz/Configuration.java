@@ -29,6 +29,9 @@ public final class Configuration {
             Color.decode("0xe84b51"),
     };
 
+    public static int thirdScreenMinWaitTime = 1;
+    public static int thirdScreenMaxWaitTime = 1;
+
     public static int secondScreenMaxWords = 1000;
     public static int secondScreenMinWaitTime = 1;
     public static int secondScreenMaxWaitTime = 1;

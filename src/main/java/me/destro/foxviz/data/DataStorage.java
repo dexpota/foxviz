@@ -2,7 +2,7 @@ package me.destro.foxviz.data;
 
 import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.model.AiWord;
-import me.destro.foxviz.model.Connection;
+import me.destro.foxviz.model.TableConnection;
 import me.destro.foxviz.utilities.MathUtilities;
 
 import java.util.LinkedList;
@@ -28,7 +28,7 @@ public class DataStorage {
         top350WordsUpdated.set(true);
     }
 
-    static public ConcurrentLinkedQueue<Connection> tablesConnections = new ConcurrentLinkedQueue<>();
+    static public ConcurrentLinkedQueue<TableConnection> tablesConnections = new ConcurrentLinkedQueue<>();
 
     static public ConcurrentLinkedQueue<AiWord> smartWords = new ConcurrentLinkedQueue<>();
 
@@ -36,7 +36,7 @@ public class DataStorage {
 
     static private long lastTimeWordFetched = System.currentTimeMillis();
 
-    public static List<Connection> fetchConnection() {
+    public static List<TableConnection> fetchConnection() {
         long current = System.currentTimeMillis();
 
         int random = MathUtilities.random(2, 3);
@@ -44,7 +44,7 @@ public class DataStorage {
         if (current - lastTimeFetched > 5*1000 && DataStorage.tablesConnections.size() > random) {
             lastTimeFetched = System.currentTimeMillis();
             if (tablesConnections.peek() != null) {
-                List<Connection> connections = new LinkedList<>();
+                List<TableConnection> connections = new LinkedList<>();
                 for (int i = 0; i<random; i++) {
                     connections.add(tablesConnections.remove());
                 }
@@ -54,8 +54,8 @@ public class DataStorage {
         return null;
     }
 
-    /*private static Connection searchConnection(Connection c) {
-        for (Connection c : tablesConnections) {
+    /*private static TableConnection searchConnection(TableConnection c) {
+        for (TableConnection c : tablesConnections) {
             if ()
         }
     }*/

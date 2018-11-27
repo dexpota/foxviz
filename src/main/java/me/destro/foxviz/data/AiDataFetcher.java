@@ -8,12 +8,11 @@ import me.destro.foxviz.Configuration;
 import me.destro.foxviz.Main;
 import me.destro.foxviz.data.model.AiData;
 import me.destro.foxviz.data.model.TopWord;
-import me.destro.foxviz.model.AiWord;
-import me.destro.foxviz.model.Connection;
 import me.destro.foxviz.utilities.MathUtilities;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
@@ -21,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class AiDataFetcher {
@@ -33,22 +33,27 @@ public class AiDataFetcher {
     public AiDataFetcher() {
         this.faker = new Faker();
 
-        /*generateConnection()
-                .subscribeOn(Schedulers.computation())
-                .subscribe(connection -> {
-                    DataStorage.tablesConnections.add(connection);
-                });*/
 
-        generateWord()
+        /*generateWord()
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
                 .subscribeOn(Schedulers.computation())
-                .subscribe(DataStorage::setTop350Words);
+                .subscribe(DataStorage::setTop350Words);*/
+
+        generateConnection()
+                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                .subscribeOn(Schedulers.computation())
+                .subscribe(AiDataStorage::updateTablesConnectionsByWord);
 
         /*fetchData()
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
                 .retry()
-                .subscribe(data -> DataStorage.setTop350Words(data.top350),
-                        error -> System.out.println("An error."));*/
+                .subscribe(data -> {
+                        DataStorage.setTop350Words(data.top350);
+                        AiDataStorage.updateTablesConnectionsByWord(data.tablesConnectionsByWord);
+                    }, error -> {
+                        System.out.println(error.getMessage());
+                        System.out.println("A fatal error occured fetching data from the AI.");
+                    });*/
     }
 
     public Observable<AiData> fetchData() {
@@ -106,17 +111,19 @@ public class AiDataFetcher {
         });
     }
 
-    public Observable<Connection> generateConnection() {
+    public Observable<Map<String, List<Integer>>> generateConnection() {
         return Observable.create(emitter -> {
-            while (true) {
-                Thread.sleep(10 * MathUtilities.random(1, 2));
-                int a = MathUtilities.random(0, 64);
-                int b = MathUtilities.random(0, 64);
-                Connection c = new Connection();
-                c.a = a;
-                c.b = b;
-                emitter.onNext(c);
+            Map<String, List<Integer>> connections = new HashedMap<>();
+
+            List<Integer> tables = new LinkedList<>();
+            int count = MathUtilities.random(0, 20);
+            for (int i = 0; i < count; ++i) {
+                int table = MathUtilities.random(0, 69);
+                tables.add(table);
             }
+
+            connections.putIfAbsent("a", tables);
+            emitter.onNext(connections);
         });
     }
 
