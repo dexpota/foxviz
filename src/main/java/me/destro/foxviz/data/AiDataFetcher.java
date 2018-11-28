@@ -35,12 +35,17 @@ public class AiDataFetcher {
 
         generateWord()
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .subscribe(AiDataStorage::setTop50Words);
+
+        generateWord()
+                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                .subscribeOn(Schedulers.io())
+                .subscribe(DataStorage::setTop350Words);
 
         generateConnection()
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .subscribe(AiDataStorage::updateTablesConnectionsByWord);
 
         /*fetchData()
@@ -115,7 +120,7 @@ public class AiDataFetcher {
             Map<String, List<Integer>> connections = new HashedMap<>();
 
             List<Integer> tables = new LinkedList<>();
-            int count = MathUtilities.random(0, 20);
+            int count = MathUtilities.random(10, 20);
             for (int i = 0; i < count; ++i) {
                 int table = MathUtilities.random(0, 69);
                 tables.add(table);

@@ -22,7 +22,13 @@ public class ProcessingApplication extends PApplet {
     public void setup() {
         super.setup();
         Ani.init(this);
-        root = SceneUtilities.buildScene();
+
+        float offset_w = (displayWidth - Main.arguments.width)/2.0f;
+        float offset_h = (displayHeight - Main.arguments.height)/2.0f;
+
+        root = SceneUtilities.buildScene(offset_w, offset_h);
+
+        root.getTransformation().translate(offset_w, offset_h);
 
         PFont mono = createFont(Configuration.fontName, Configuration.fontSize);
         textFont(mono);

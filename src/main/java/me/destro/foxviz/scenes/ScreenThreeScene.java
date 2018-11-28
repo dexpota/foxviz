@@ -250,33 +250,35 @@ public class ScreenThreeScene extends Node {
         Table t1 = getTable(connection.a);
         Table t2 = getTable(connection.b);
 
-        Point p1 = t1.getPosition();
-        Point p2 = t2.getPosition();
+        if (t1 != null && t2 != null) {
+            Point p1 = t1.getPosition();
+            Point p2 = t2.getPosition();
 
-        ConnectionNode c1 = new ConnectionNode(connection);
-        c1.p1 = p1;
-        c1.x = p1.x();
-        c1.y = p1.y();
+            ConnectionNode c1 = new ConnectionNode(connection);
+            c1.p1 = p1;
+            c1.x = p1.x();
+            c1.y = p1.y();
 
-        c1.color = MathUtilities.generateRandomColor(MathUtilities.pickValue(Configuration.basicConnectionColors));
+            c1.color = MathUtilities.generateRandomColor(MathUtilities.pickValue(Configuration.basicConnectionColors));
 
-        c1.f1 = MathUtilities.randomFloat() * 0.25f + 0.25f;
-        c1.f2 = MathUtilities.randomFloat() * 0.25f + 0.25f;
+            c1.f1 = MathUtilities.randomFloat() * 0.25f + 0.25f;
+            c1.f2 = MathUtilities.randomFloat() * 0.25f + 0.25f;
 
-        c1.angle1 = MathUtilities.randomFloat() * 30.0f + 15.0f;
-        c1.angle2 = MathUtilities.randomFloat() * 30.0f + 15.0f;
+            c1.angle1 = MathUtilities.randomFloat() * 30.0f + 15.0f;
+            c1.angle2 = MathUtilities.randomFloat() * 30.0f + 15.0f;
 
-        if (t1.size < 200)
-            Ani.to(t1, 4.0f, "size", t1.size + 20, Ani.ELASTIC_IN_OUT);
-        if (t2.size < 200)
-            Ani.to(t2, 4.0f, "size", t2.size + 20, Ani.ELASTIC_IN_OUT);
+            if (t1.size < 200)
+                Ani.to(t1, 4.0f, "size", t1.size + 20, Ani.ELASTIC_IN_OUT);
+            if (t2.size < 200)
+                Ani.to(t2, 4.0f, "size", t2.size + 20, Ani.ELASTIC_IN_OUT);
 
-        Ani.to(c1, 1.5f, "alpha", 255.0f, Ani.LINEAR);
-        Ani.to(c1, 1.5f, String.format("x:%d,y:%d", p2.x(), p2.y()), Ani.CIRC_IN_OUT);
+            Ani.to(c1, 1.5f, "alpha", 255.0f, Ani.LINEAR);
+            Ani.to(c1, 1.5f, String.format("x:%d,y:%d", p2.x(), p2.y()), Ani.CIRC_IN_OUT);
 
 
-        onScreen.add(connection);
-        addNode(c1);
+            onScreen.add(connection);
+            addNode(c1);
+        }
     }
 
 

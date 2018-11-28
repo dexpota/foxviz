@@ -37,7 +37,7 @@ public class SceneUtilities {
         return scenes;
     }
 
-    public static Node buildScene() {
+    public static Node buildScene(float offset_w, float offset_h) {
         float scale = (float) (1.0/ Main.arguments.pixelSize);
 
         Node root = new DrawingNode(scene -> {
@@ -45,29 +45,28 @@ public class SceneUtilities {
         });
         root.getTransformation().scale(scale);
 
-        Node screen1 = buildFirstScreen();
-        Node screen2 = buildSecondScreen();
-        Node screen3 = buildThirdScreen();
+        Node screen1 = buildFirstScreen(offset_w, offset_h);
+        Node screen2 = buildSecondScreen(offset_w, offset_h);
+        Node screen3 = buildThirdScreen(offset_w, offset_h);
 
-        // TODO restore, now i work only on the second screen.
         root.addNode(screen1);
-        //root.addNode(screen2);
-        //root.addNode(screen3);
+        root.addNode(screen2);
+        root.addNode(screen3);
 
         return root;
     }
 
 
-    private static Node buildFirstScreen() {
+    private static Node buildFirstScreen(float offset_w, float offset_h) {
         Node root = new DrawingNode(scene -> {});
 
-        Node left = new ClipNode(0, 0,
+        Node left = new ClipNode(offset_w, offset_h,
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
 
         left.addNode(new TextSpawningNode());
         left.getTransformation().translate(100, 100);
 
-        Node right = new ClipNode((float) (1000.f/ Main.arguments.pixelSize), 0,
+        Node right = new ClipNode(offset_w + (float) (1000.f/ Main.arguments.pixelSize), offset_h,
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
         right.getTransformation().translate(1050, 0);
         right.addNode(new TextSpawningNode());
@@ -77,8 +76,8 @@ public class SceneUtilities {
         return root;
     }
 
-    private static Node buildSecondScreen() {
-        Node screen2 = new ClipNode((float) (2000.f/ Main.arguments.pixelSize), 0,
+    private static Node buildSecondScreen(float offset_w, float offset_h) {
+        Node screen2 = new ClipNode(offset_w + (float) (2000.f/ Main.arguments.pixelSize), offset_h,
                 (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
 
         screen2.getTransformation().translate(2000, 0);
@@ -89,8 +88,8 @@ public class SceneUtilities {
         return screen2;
     }
 
-    private static Node buildThirdScreen() {
-        Node screen3 = new ClipNode((float) (4000.f/ Main.arguments.pixelSize), 0,
+    private static Node buildThirdScreen(float offset_w, float offset_h) {
+        Node screen3 = new ClipNode( offset_w + (float) (4000.f/ Main.arguments.pixelSize), offset_h,
                 (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
 
         screen3.getTransformation().translate(4000, 0);
