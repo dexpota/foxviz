@@ -5,6 +5,9 @@ import java.awt.*;
 import static processing.core.PApplet.unhex;
 
 public final class Configuration {
+    public static Color red = Color.decode("0xe94b51");
+    public static Color purple = Color.decode("0x583f91");
+
     public static String phrasesDataUrl = "https://www.visionarydays.it/webapp/corpo.csv";
 
     // TODO insert a more appropriate time
@@ -38,6 +41,7 @@ public final class Configuration {
 
     public static int firstScreenMinWaitTime = 1;
     public static int firstScreenMaxWaitTime = 5;
+
 
     static {
         backgroundColor = unhex("FF171717");

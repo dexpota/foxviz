@@ -2,6 +2,9 @@ package me.destro.foxviz.utilities;
 
 import processing.core.PApplet;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class TextUtilities {
 
     public static String createLineBreaks(String str, float maxWidth, PApplet scene) {
@@ -48,28 +51,33 @@ public class TextUtilities {
             if(str.charAt(i) == (char)10)
                 linebreaks++;
 
-        // Calculate & return height
-        if(linebreaks == 0)
-            return scene.textAscent() + scene.textDescent();
-        else
-            //return linebreaks * scene.textLeading() + scene.textAscent() + scene.textDescent();
-            return linebreaks * scene.g.textLeading + scene.textAscent() + scene.textDescent();
-
+        return computeTextHeight(scene, linebreaks);
     }
 
-    public static float textHeight(String str, PApplet scene, float textLeading) {
-        // Count (unix) linebreaks
-        int linebreaks = 0;
-        for(int i = 0, n = str.length(); i < n; i++)
-            if(str.charAt(i) == (char)10)
-                linebreaks++;
-
+    public static float computeTextHeight(PApplet scene, int linebreaks) {
         // Calculate & return height
         if(linebreaks == 0)
             return scene.textAscent() + scene.textDescent();
         else
             //return linebreaks * scene.textLeading() + scene.textAscent() + scene.textDescent();
             return linebreaks * scene.g.textLeading + scene.textAscent() + scene.textDescent();
+    }
 
+    public static Matcher match(String source, String word) {
+        String pattern = "\\b"+word+"\\b";
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(source);
+        return m;
+    }
+
+    public static boolean contain(String source, String word){
+        Matcher m = match(source, word);
+        return m.find();
+    }
+
+    public static int index(String source, String word){
+        Matcher m = match(source, word);
+        m.find();
+        return m.start();
     }
 }

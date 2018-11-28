@@ -10,6 +10,7 @@ import me.destro.foxviz.data.AiDataStorage;
 import me.destro.foxviz.data.PhrasesDataStorage;
 import me.destro.foxviz.data.model.AiData;
 import me.destro.foxviz.data.model.TopWord;
+import me.destro.foxviz.scenegraph.DrawingNode;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
 import me.destro.foxviz.scenegraph.WritingTextNode;
@@ -18,6 +19,7 @@ import me.destro.foxviz.utilities.TextUtilities;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -64,8 +66,19 @@ public class TextSpawningNode extends Node {
             return;
 
         for (TopWord word : top50) {
-            if (textNode.getText().contains(word.word)) {
-                System.out.println("Contiene una parola da evidenziare");
+            if (TextUtilities.contain(textNode.getText(), word.word)) {
+                PVector position = textNode.getWordPosition(word.word);
+
+                if (position != null) {
+                    textNode.addNode(new DrawingNode(scene ->  {
+                        scene.noStroke();
+
+                        scene.fill(Configuration.red.getRed(), Configuration.red.getGreen(), Configuration.red.getBlue(), 80);
+                        scene.rect((float) (position.x * Main.arguments.pixelSize),
+                                (float) (position.y * Main.arguments.pixelSize),
+                                (float) (scene.textWidth(word.word) * Main.arguments.pixelSize), 100);
+                    }));
+                }
             }
         }
     }
@@ -82,14 +95,21 @@ public class TextSpawningNode extends Node {
     }
 
     private void addTextNode(PApplet scene, String text) {
-        WritingTextNode textNode = new WritingTextNode(text,
+        WritingTextNode textNode = new WritingTextNode(scene, text,
                 new PVector(0, 0), (float) (1000.0f/Main.arguments.pixelSize), 22, 22);
 
-        float textHeight = textNode.getTextHeight(scene);
-        textNode.getTransformation().translate(0, (float) (-textHeight*Main.arguments.pixelSize));
+        float textHeight = textNode.getTextHeight();
 
-        Ani.to(textNode.getTransformation(), 60, "y",
-                (float) (4200+(textHeight*Main.arguments.pixelSize)), Ani.LINEAR);
+        float startPosition = (float) (-textHeight*Main.arguments.pixelSize - MathUtilities.random(50, 200)) ;
+        float endPosition = (float) 4200;
+
+        textNode.getTransformation().translate(0, startPosition);
+
+
+        float space = endPosition - startPosition;
+        float time = space / 50;
+
+        Ani.to(textNode.getTransformation(), time, "y", endPosition, Ani.LINEAR);
 
         highlightWords(textNode);
 
