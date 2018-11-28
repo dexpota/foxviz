@@ -20,22 +20,26 @@ public class WritingTextNode extends Node {
     float textLeading;
 
     //positioning
-    PVector bgPos, textPos;
+    PVector bgPos;
     float w, h;
 
     //timimng
     Stopwatch timer = Stopwatch.createStarted();
     int wait;
 
-    float fontSize = 16.0f;
+    float fontSize;
+
+    public String getText() {
+        return this.text;
+    }
 
     /*************THE CONSTRUCTOR**********/
     //it takes the text, positioning stuff and init everything
     public WritingTextNode(String _tx, PVector _bg, float _w, float fontSize, float textLeading) {
-        bgPos   = _bg;
-        w       = _w;
-        text    = _tx;
-        displayText = "";
+        this.bgPos   = _bg;
+        this.w       = _w;
+        this.text    = _tx;
+        this.displayText = "";
         this.fontSize = fontSize;
         this.textLeading = textLeading;
 
@@ -51,7 +55,7 @@ public class WritingTextNode extends Node {
             timer.reset();
             timer.start();
         }
-    }//update()
+    }
 
     boolean isFinished() {
         return displayText.length() == text.length();
@@ -61,20 +65,11 @@ public class WritingTextNode extends Node {
         scene.scale((float) Main.arguments.pixelSize);
         scene.textSize(fontSize);
         scene.textLeading(textLeading);
-
-        if (this.fullTextWithBreakingLines == null) {
-            this.fullTextWithBreakingLines = createLineBreaks(this.text, this.w, scene);
-        }
-
-        //scene.fill(200, 20, 0, 20);
-        //scene.rect(0, 0, this.w, TextUtilities.textHeight(this.fullTextWithBreakingLines, scene));
-
         scene.fill(255);
-        //scene.text(createLineBreaks(displayText, this.w, scene), 0, scene.textAscent());
-        //scene.text(displayText, textPos.x, textPos.y);
+
         scene.text(String.valueOf(TextUtilities.textHeight(createLineBreaks(this.fullTextWithBreakingLines, this.w, scene), scene)), 0, 0);
         scene.scale((float) (1.0f/Main.arguments.pixelSize));
-    }//drawText
+    }
 
     public float getTextHeight(PApplet scene) {
         scene.pushStyle();
@@ -90,6 +85,7 @@ public class WritingTextNode extends Node {
 
         return v;
     }
+
     @Override
     public void draw(PApplet scene) {
         update();

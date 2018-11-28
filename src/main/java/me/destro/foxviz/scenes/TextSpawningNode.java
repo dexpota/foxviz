@@ -6,7 +6,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import me.destro.foxviz.Configuration;
 import me.destro.foxviz.Main;
+import me.destro.foxviz.data.AiDataStorage;
 import me.destro.foxviz.data.PhrasesDataStorage;
+import me.destro.foxviz.data.model.AiData;
+import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
 import me.destro.foxviz.scenegraph.WritingTextNode;
@@ -22,13 +25,12 @@ import java.util.concurrent.TimeUnit;
 
 public class TextSpawningNode extends Node {
     List<String> phrases;
+    List<TopWord> top50;
 
     Stopwatch insertionStopWatch = Stopwatch.createStarted();
     int insertionWaitTime;
 
     public TextSpawningNode() {
-        phrases = new LinkedList<>();
-
         insertionWaitTime = MathUtilities.random(Configuration.firstScreenMinWaitTime, Configuration.firstScreenMaxWaitTime);
     }
 
@@ -37,6 +39,7 @@ public class TextSpawningNode extends Node {
         scene.background(Configuration.backgroundColor);
 
         phrases = PhrasesDataStorage.get();
+        top50 = AiDataStorage.getTop50Words();
 
         if (insertionStopWatch.elapsed(TimeUnit.SECONDS) > insertionWaitTime
                 && canGeneratePhrase()) {
@@ -44,16 +47,7 @@ public class TextSpawningNode extends Node {
             String phrase = MathUtilities.pickValue(phrases);
 
             if (phrase != null) {
-                WritingTextNode textNode = new WritingTextNode(phrase,
-                        new PVector(0, 0), (float) (1000.0f/Main.arguments.pixelSize), 22, 22);
-
-                float textHeight = textNode.getTextHeight(scene);
-                textNode.getTransformation().translate(0, (float) (-textHeight*Main.arguments.pixelSize));
-
-                Ani.to(textNode.getTransformation(), 60, "y",
-                        (float) (4200+(textHeight*Main.arguments.pixelSize)), Ani.LINEAR);
-
-                this.addNode(textNode);
+                addTextNode(scene, phrase);
 
                 insertionWaitTime = MathUtilities.random(Configuration.firstScreenMinWaitTime, Configuration.firstScreenMaxWaitTime);
                 insertionStopWatch.stop();
@@ -65,15 +59,41 @@ public class TextSpawningNode extends Node {
         deleteOffscreenNodes();
     }
 
+    private void highlightWords(WritingTextNode textNode) {
+        if (top50 == null)
+            return;
+
+        for (TopWord word : top50) {
+            if (textNode.getText().contains(word.word)) {
+                System.out.println("Contiene una parola da evidenziare");
+            }
+        }
+    }
+
     private boolean canGeneratePhrase() {
         for (Node n : this) {
             if (n instanceof WritingTextNode) {
-                if (((WritingTextNode) n).getTransformation().y() < 0){
+                if (n.getTransformation().y() < 0){
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private void addTextNode(PApplet scene, String text) {
+        WritingTextNode textNode = new WritingTextNode(text,
+                new PVector(0, 0), (float) (1000.0f/Main.arguments.pixelSize), 22, 22);
+
+        float textHeight = textNode.getTextHeight(scene);
+        textNode.getTransformation().translate(0, (float) (-textHeight*Main.arguments.pixelSize));
+
+        Ani.to(textNode.getTransformation(), 60, "y",
+                (float) (4200+(textHeight*Main.arguments.pixelSize)), Ani.LINEAR);
+
+        highlightWords(textNode);
+
+        this.addNode(textNode);
     }
 
     private void deleteOffscreenNodes() {

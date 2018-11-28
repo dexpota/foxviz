@@ -36,7 +36,7 @@ public class AiDataFetcher {
         generateWord()
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
                 .subscribeOn(Schedulers.computation())
-                .subscribe(DataStorage::setTop350Words);
+                .subscribe(AiDataStorage::setTop50Words);
 
         generateConnection()
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
@@ -127,7 +127,7 @@ public class AiDataFetcher {
     }
 
     private List<TopWord> generateFake() {
-        int n = MathUtilities.random(10, 60);
+        int n = MathUtilities.random(10, 50);
         List<TopWord> topWords = new ArrayList<>(n);
 
         for (int i = 0; i < n; ++i) {

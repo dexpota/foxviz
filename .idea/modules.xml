@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/foxviz.iml" filepath="$PROJECT_DIR$/foxviz.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/foxviz_main.iml" filepath="$PROJECT_DIR$/.idea/modules/foxviz_main.iml" group="foxviz" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/foxviz_test.iml" filepath="$PROJECT_DIR$/.idea/modules/foxviz_test.iml" group="foxviz" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/foxviz.main.iml" filepath="$PROJECT_DIR$/.idea/modules/foxviz.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/foxviz.test.iml" filepath="$PROJECT_DIR$/.idea/modules/foxviz.test.iml" />
     </modules>
   </component>
 </project>
