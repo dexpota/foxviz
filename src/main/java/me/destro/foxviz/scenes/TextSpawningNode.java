@@ -9,8 +9,11 @@ import me.destro.foxviz.Main;
 import me.destro.foxviz.data.PhrasesDataStorage;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
+import me.destro.foxviz.scenegraph.WritingTextNode;
 import me.destro.foxviz.utilities.MathUtilities;
+import me.destro.foxviz.utilities.TextUtilities;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,13 +44,14 @@ public class TextSpawningNode extends Node {
             String phrase = MathUtilities.pickValue(phrases);
 
             if (phrase != null) {
-                Node textNode = new TextNode(phrase, Configuration.firstColumnTextSize,
-                        (float) (1000.f/Main.arguments.pixelSize),
-                        getTextHeightScreen());
+                WritingTextNode textNode = new WritingTextNode(phrase,
+                        new PVector(0, 0), (float) (1000.0f/Main.arguments.pixelSize), 22, 22);
 
-                textNode.getTransformation().translate(0, -getTextHeight());
+                float textHeight = textNode.getTextHeight(scene);
+                textNode.getTransformation().translate(0, (float) (-textHeight*Main.arguments.pixelSize));
 
-                Ani.to(textNode.getTransformation(), 60, "y", 4200, Ani.SINE_OUT);
+                Ani.to(textNode.getTransformation(), 60, "y",
+                        (float) (4200+(textHeight*Main.arguments.pixelSize)), Ani.LINEAR);
 
                 this.addNode(textNode);
 
@@ -63,8 +67,8 @@ public class TextSpawningNode extends Node {
 
     private boolean canGeneratePhrase() {
         for (Node n : this) {
-            if (n instanceof TextNode) {
-                if (((TextNode) n).getTransformation().y() < 0){
+            if (n instanceof WritingTextNode) {
+                if (((WritingTextNode) n).getTransformation().y() < 0){
                     return false;
                 }
             }
@@ -74,14 +78,6 @@ public class TextSpawningNode extends Node {
 
     private void deleteOffscreenNodes() {
         removeNodeIf(node -> node instanceof TextNode && node.getTransformation().y() > 4150);
-    }
-
-    private float getTextHeightScreen() {
-        return (float) (Configuration.firstScreenTextHeight/Main.arguments.pixelSize);
-    }
-
-    private float getTextHeight() {
-        return Configuration.firstScreenTextHeight;
     }
 
 }

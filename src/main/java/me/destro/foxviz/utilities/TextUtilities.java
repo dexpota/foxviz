@@ -40,4 +40,36 @@ public class TextUtilities {
         // Return string
         return strBuffer.toString();
     }
+
+    public static float textHeight(String str, PApplet scene) {
+        // Count (unix) linebreaks
+        int linebreaks = 0;
+        for(int i = 0, n = str.length(); i < n; i++)
+            if(str.charAt(i) == (char)10)
+                linebreaks++;
+
+        // Calculate & return height
+        if(linebreaks == 0)
+            return scene.textAscent() + scene.textDescent();
+        else
+            //return linebreaks * scene.textLeading() + scene.textAscent() + scene.textDescent();
+            return linebreaks * scene.g.textLeading + scene.textAscent() + scene.textDescent();
+
+    }
+
+    public static float textHeight(String str, PApplet scene, float textLeading) {
+        // Count (unix) linebreaks
+        int linebreaks = 0;
+        for(int i = 0, n = str.length(); i < n; i++)
+            if(str.charAt(i) == (char)10)
+                linebreaks++;
+
+        // Calculate & return height
+        if(linebreaks == 0)
+            return scene.textAscent() + scene.textDescent();
+        else
+            //return linebreaks * scene.textLeading() + scene.textAscent() + scene.textDescent();
+            return linebreaks * scene.g.textLeading + scene.textAscent() + scene.textDescent();
+
+    }
 }

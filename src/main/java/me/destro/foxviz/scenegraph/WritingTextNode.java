@@ -3,6 +3,7 @@ package me.destro.foxviz.scenegraph;
 import com.google.common.base.Stopwatch;
 import me.destro.foxviz.Main;
 import me.destro.foxviz.scenegraph.Node;
+import me.destro.foxviz.utilities.TextUtilities;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -14,6 +15,9 @@ import static processing.core.PConstants.CORNER;
 public class WritingTextNode extends Node {
     // the text and a holder
     String text, displayText;
+    String fullTextWithBreakingLines;
+
+    float textLeading;
 
     //positioning
     PVector bgPos, textPos;
@@ -27,16 +31,13 @@ public class WritingTextNode extends Node {
 
     /*************THE CONSTRUCTOR**********/
     //it takes the text, positioning stuff and init everything
-    public WritingTextNode(String _tx, PVector _bg, float _w, float fontSize) {
+    public WritingTextNode(String _tx, PVector _bg, float _w, float fontSize, float textLeading) {
         bgPos   = _bg;
         w       = _w;
-        h       = 26;
         text    = _tx;
         displayText = "";
         this.fontSize = fontSize;
-
-        //calc text pos relative to bg pos
-        textPos = new PVector(bgPos.x + 27, (bgPos.y + h) - 8);
+        this.textLeading = textLeading;
 
         // the speed of "typing"
         wait = 100;
@@ -59,13 +60,36 @@ public class WritingTextNode extends Node {
     void drawText(PApplet scene) {
         scene.scale((float) Main.arguments.pixelSize);
         scene.textSize(fontSize);
-        scene.textLeading(22);
+        scene.textLeading(textLeading);
+
+        if (this.fullTextWithBreakingLines == null) {
+            this.fullTextWithBreakingLines = createLineBreaks(this.text, this.w, scene);
+        }
+
+        //scene.fill(200, 20, 0, 20);
+        //scene.rect(0, 0, this.w, TextUtilities.textHeight(this.fullTextWithBreakingLines, scene));
+
         scene.fill(255);
-        scene.text(createLineBreaks(displayText, this.w, scene), textPos.x, textPos.y + scene.textAscent());
+        //scene.text(createLineBreaks(displayText, this.w, scene), 0, scene.textAscent());
         //scene.text(displayText, textPos.x, textPos.y);
+        scene.text(String.valueOf(TextUtilities.textHeight(createLineBreaks(this.fullTextWithBreakingLines, this.w, scene), scene)), 0, 0);
         scene.scale((float) (1.0f/Main.arguments.pixelSize));
     }//drawText
 
+    public float getTextHeight(PApplet scene) {
+        scene.pushStyle();
+        scene.textSize(fontSize);
+        scene.textLeading(textLeading);
+
+        if (this.fullTextWithBreakingLines == null) {
+            this.fullTextWithBreakingLines = createLineBreaks(this.text, this.w, scene);
+        }
+
+        float v = TextUtilities.textHeight(createLineBreaks(this.fullTextWithBreakingLines, this.w, scene), scene);
+        scene.popStyle();
+
+        return v;
+    }
     @Override
     public void draw(PApplet scene) {
         update();

@@ -50,14 +50,10 @@ public class SceneUtilities {
         Node screen3 = buildThirdScreen();
 
         // TODO restore, now i work only on the second screen.
-        //root.addNode(screen1);
+        root.addNode(screen1);
         //root.addNode(screen2);
         //root.addNode(screen3);
 
-        Node n = new WritingTextNode("Testo lungo o corto non lo so. Proviamo a scrivere qualcosa di lungo lungo lungo. Ma senza esagerare nè.",
-                new PVector(2000, 1000),
-                100, 22);
-        root.addNode(n);
         return root;
     }
 
