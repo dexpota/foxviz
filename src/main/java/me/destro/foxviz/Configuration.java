@@ -38,6 +38,7 @@ public final class Configuration {
     public static int secondScreenMaxWords = 1000;
     public static int secondScreenMinWaitTime = 1;
     public static int secondScreenMaxWaitTime = 1;
+    public static float secondScreenTextSize = 26;
 
     public static int firstScreenMinWaitTime = 1;
     public static int firstScreenMaxWaitTime = 5;

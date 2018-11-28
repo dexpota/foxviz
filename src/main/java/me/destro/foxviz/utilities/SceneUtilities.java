@@ -58,17 +58,23 @@ public class SceneUtilities {
 
 
     private static Node buildFirstScreen(float offset_w, float offset_h) {
-        Node root = new DrawingNode(scene -> {});
+        Node root = new ClipNode(offset_w, offset_h,
+                (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
+        root.appendNode(new DrawingNode(scene -> {
+            scene.background(Configuration.backgroundColor);
+        }));
 
-        Node left = new ClipNode(offset_w, offset_h,
-                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
+        Node left = new ClipNode((float) (offset_w + 100.f/Main.arguments.pixelSize),
+                (float) (offset_h + 100.f/Main.arguments.pixelSize),
+                (float) (850.f/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
 
         left.addNode(new TextSpawningNode());
         left.getTransformation().translate(100, 100);
 
-        Node right = new ClipNode(offset_w + (float) (1000.f/ Main.arguments.pixelSize), offset_h,
-                (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
-        right.getTransformation().translate(1050, 0);
+        Node right = new ClipNode(offset_w + (float) (1050.f/ Main.arguments.pixelSize),
+                (float) (offset_h + 100.f/Main.arguments.pixelSize),
+                (float) (850.f/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
+        right.getTransformation().translate(1050, 100);
         right.addNode(new TextSpawningNode());
 
         root.addNode(left);

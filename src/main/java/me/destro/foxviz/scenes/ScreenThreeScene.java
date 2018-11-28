@@ -261,8 +261,12 @@ public class ScreenThreeScene extends Node {
 
             c1.color = MathUtilities.generateRandomColor(MathUtilities.pickValue(Configuration.basicConnectionColors));
 
-            c1.f1 = MathUtilities.randomFloat() * 0.25f + 0.25f;
-            c1.f2 = MathUtilities.randomFloat() * 0.25f + 0.25f;
+            double x = Math.sqrt(Math.pow(c1.x - p2.x(), 2) + Math.pow(c1.y - p2.y(), 2));
+
+            double factor = -0.5f/4000*x+0.6;
+
+            c1.f1 = (float) factor;
+            c1.f2 = (float) factor;
 
             c1.angle1 = MathUtilities.randomFloat() * 30.0f + 15.0f;
             c1.angle2 = MathUtilities.randomFloat() * 30.0f + 15.0f;

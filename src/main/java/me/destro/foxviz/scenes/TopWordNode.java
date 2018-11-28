@@ -1,6 +1,7 @@
 package me.destro.foxviz.scenes;
 
 import de.looksgood.ani.Ani;
+import me.destro.foxviz.Configuration;
 import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
@@ -23,7 +24,7 @@ class TopWordNode extends Node {
 
         this.topWord = word;
 
-        textNode = new TextNode(word.word);
+        textNode = new TextNode(word.word, (int) Configuration.secondScreenTextSize);
         this.addNode(textNode);
     }
 

@@ -46,10 +46,23 @@ public class WritingTextNode extends Node {
         this.displayText = "";
         this.fontSize = fontSize;
         this.textLeading = textLeading;
+
+        scene.pushStyle();
+        scene.textSize(fontSize);
+        scene.textLeading(textLeading);
         this.fullTextWithBreakingLines = createLineBreaks(this.text, this.w, scene);
+        scene.popStyle();
 
         // the speed of "typing"
-        wait = 100;
+        float h = this.getTextHeight();
+
+        System.out.println(String.format("H: %f", h));
+
+
+        float max_rate = 100;
+        float min_rate = 30;
+
+        wait = (int) Math.max(Math.min((min_rate - max_rate)/1000 * h + max_rate, max_rate), min_rate);
     }
 
     void update() {
