@@ -76,7 +76,7 @@ public class TextSpawningNode extends Node {
                         scene.fill(Configuration.red.getRed(), Configuration.red.getGreen(), Configuration.red.getBlue(), 80);
                         scene.rect((float) (position.x * Main.arguments.pixelSize),
                                 (float) (position.y * Main.arguments.pixelSize),
-                                (float) (scene.textWidth(word.word) * Main.arguments.pixelSize), 100);
+                                (float) (scene.textWidth(word.word) * Main.arguments.pixelSize), 80);
                     }));
                 }
             }
@@ -96,7 +96,7 @@ public class TextSpawningNode extends Node {
 
     private void addTextNode(PApplet scene, String text) {
         WritingTextNode textNode = new WritingTextNode(scene, text,
-                new PVector(0, 0), (float) (1000.0f/Main.arguments.pixelSize), 22, 22);
+                new PVector(0, 0), (float) (1000.0f/Main.arguments.pixelSize), 20, 22);
 
         float textHeight = textNode.getTextHeight();
 

@@ -73,8 +73,8 @@ public class WritingTextNode extends Node {
         scene.fill(255);
 
         //scene.text(createLineBreaks(this.displayText, this.w, scene), 0, scene.textAscent());
-        //scene.text(displayText, 0, scene.textAscent());
-        scene.text(fullTextWithBreakingLines, 0, scene.textAscent());
+        scene.text(displayText, 0, scene.textAscent());
+        //scene.text(fullTextWithBreakingLines, 0, scene.textAscent());
         scene.scale((float) (1.0f/Main.arguments.pixelSize));
     }
 
@@ -102,7 +102,7 @@ public class WritingTextNode extends Node {
 
             int start_index = last_new_line == -1 ? 0 : last_new_line;
 
-            float y = computeTextHeight(scene, lines_count) - scene.textDescent() - scene.textAscent();
+            float y = computeTextHeight(scene, lines_count) - scene.textAscent();
             float x = scene.textWidth(fullTextWithBreakingLines.substring(start_index, index));
             scene.popStyle();
 
