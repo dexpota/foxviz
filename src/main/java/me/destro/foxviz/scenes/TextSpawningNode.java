@@ -96,7 +96,7 @@ public class TextSpawningNode extends Node {
 
     private void addTextNode(PApplet scene, String text) {
         WritingTextNode textNode = new WritingTextNode(scene, text,
-                new PVector(0, 0), (float) (1000.0f/Main.arguments.pixelSize), 20, 22);
+                new PVector(0, 0), (float) (850.0f/Main.arguments.pixelSize), 20, 22);
 
         float textHeight = textNode.getTextHeight();
 

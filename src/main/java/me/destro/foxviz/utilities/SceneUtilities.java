@@ -65,10 +65,11 @@ public class SceneUtilities {
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
 
         left.addNode(new TextSpawningNode());
+        left.getTransformation().translate(100, 100);
 
         Node right = new ClipNode((float) (1000.f/ Main.arguments.pixelSize), 0,
                 (float) (1000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
-        right.getTransformation().translate(1000, 0);
+        right.getTransformation().translate(1050, 0);
         right.addNode(new TextSpawningNode());
 
         root.addNode(left);

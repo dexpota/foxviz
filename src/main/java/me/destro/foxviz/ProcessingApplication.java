@@ -14,6 +14,7 @@ public class ProcessingApplication extends PApplet {
     @Override
     public void settings() {
         super.settings();
+        fullScreen();
         size(Main.arguments.width, Main.arguments.height, P2D);
     }
 
@@ -26,6 +27,8 @@ public class ProcessingApplication extends PApplet {
         PFont mono = createFont(Configuration.fontName, Configuration.fontSize);
         textFont(mono);
     }
+
+
 
     @Override
     public void draw() {
