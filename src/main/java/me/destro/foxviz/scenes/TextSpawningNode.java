@@ -1,5 +1,6 @@
 package me.destro.foxviz.scenes;
 
+import com.google.common.base.Function;
 import com.google.common.base.Stopwatch;
 import de.looksgood.ani.Ani;
 import io.reactivex.disposables.Disposable;
@@ -24,27 +25,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public class TextSpawningNode extends Node {
+    private Supplier<List<String>> get;
     List<String> phrases;
     List<TopWord> top50;
 
     Stopwatch insertionStopWatch = Stopwatch.createStarted();
     int insertionWaitTime;
 
-    public TextSpawningNode() {
+    public TextSpawningNode(Supplier<List<String>> get) {
+        this.get = get;
         insertionWaitTime = MathUtilities.random(Configuration.firstScreenMinWaitTime, Configuration.firstScreenMaxWaitTime);
     }
+
 
     @Override
     public void draw(PApplet scene) {
         scene.background(Configuration.backgroundColor);
 
-        phrases = PhrasesDataStorage.get();
+        phrases = get.get();
         top50 = AiDataStorage.getTop50Words();
 
         if (insertionStopWatch.elapsed(TimeUnit.SECONDS) > insertionWaitTime
-                && canGeneratePhrase()) {
+                && phrases != null && canGeneratePhrase()) {
 
             String phrase = MathUtilities.pickValue(phrases);
 

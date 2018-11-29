@@ -16,6 +16,10 @@ dependencies {
     compile "net.sourceforge.argparse4j:argparse4j:0.8.1"
     compile "com.squareup.moshi:moshi:1.8.0"
     compile 'com.squareup.okhttp3:okhttp:3.12.0'
+    compile 'com.squareup.retrofit2:retrofit:2.5.0'
+    compile 'com.squareup.retrofit2:converter-moshi:2.5.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+
     compile "io.reactivex.rxjava2:rxjava:2.2.3"
     compile "com.github.javafaker:javafaker:0.16"
     compile "org.apache.logging.log4j:log4j-core:2.11.1"

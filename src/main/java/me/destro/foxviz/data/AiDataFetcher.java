@@ -2,6 +2,7 @@ package me.destro.foxviz.data;
 
 import com.github.javafaker.Faker;
 import com.squareup.moshi.Moshi;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import me.destro.foxviz.Configuration;
@@ -15,13 +16,18 @@ import okhttp3.Response;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class AiDataFetcher {
     private Faker faker;
@@ -33,31 +39,36 @@ public class AiDataFetcher {
     public AiDataFetcher() {
         this.faker = new Faker();
 
-        generateWord()
-                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.io())
-                .subscribe(AiDataStorage::setTop50Words);
 
-        generateWord()
-                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.io())
-                .subscribe(DataStorage::setTop350Words);
+        // Fetch top50 words
+        if (Configuration.debug) {
+            generateWord()
+                    .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(AiDataStorage::setTop50Words);
 
-        generateConnection()
-                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.io())
-                .subscribe(AiDataStorage::updateTablesConnectionsByWord);
+            generateWord()
+                    .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(DataStorage::setTop350Words);
 
-        /*fetchData()
-                .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                .retry()
-                .subscribe(data -> {
+            generateConnection()
+                    .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(AiDataStorage::updateTablesConnectionsByWord);
+        }else {
+            fetchData()
+                    .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                    .retry()
+                    .subscribe(data -> {
+                        AiDataStorage.setTop50Words(data.top50);
                         DataStorage.setTop350Words(data.top350);
                         AiDataStorage.updateTablesConnectionsByWord(data.tablesConnectionsByWord);
                     }, error -> {
                         System.out.println(error.getMessage());
                         System.out.println("A fatal error occured fetching data from the AI.");
-                    });*/
+                    });
+        }
     }
 
     public Observable<AiData> fetchData() {

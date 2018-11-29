@@ -26,7 +26,9 @@ public class PhrasesDataFetcher {
     public PhrasesDataFetcher() {
         faker = new Faker();
 
-        fetchFakeData()
+        Observable<List<String>> observable = Configuration.debug ? fetchFakeData() : fetchData();
+
+        observable
                 .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
                 .retry()
                 .subscribe(PhrasesDataStorage::set,

@@ -2,6 +2,8 @@ package me.destro.foxviz.utilities;
 
 import me.destro.foxviz.Configuration;
 import me.destro.foxviz.Main;
+import me.destro.foxviz.data.PhrasesDataStorage;
+import me.destro.foxviz.data.TweetsDataStorage;
 import me.destro.foxviz.scenegraph.*;
 import me.destro.foxviz.scenes.ScreenThreeScene;
 import me.destro.foxviz.scenes.ScreenTwoScene;
@@ -68,14 +70,14 @@ public class SceneUtilities {
                 (float) (offset_h + 100.f/Main.arguments.pixelSize),
                 (float) (850.f/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
 
-        left.addNode(new TextSpawningNode());
+        left.addNode(new TextSpawningNode(PhrasesDataStorage::get));
         left.getTransformation().translate(100, 100);
 
         Node right = new ClipNode(offset_w + (float) (1050.f/ Main.arguments.pixelSize),
                 (float) (offset_h + 100.f/Main.arguments.pixelSize),
                 (float) (850.f/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
         right.getTransformation().translate(1050, 100);
-        right.addNode(new TextSpawningNode());
+        right.addNode(new TextSpawningNode(TweetsDataStorage::get));
 
         root.addNode(left);
         root.addNode(right);
