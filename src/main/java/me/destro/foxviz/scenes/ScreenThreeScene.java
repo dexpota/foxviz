@@ -132,18 +132,19 @@ public class ScreenThreeScene extends Node {
 
     private void generateTables(){
         double[][] arc_angles = {
-                MathUtilities.linspace(0, 2 * Math.PI, 11),
-                MathUtilities.linspace(Math.toRadians(-33), Math.toRadians(-180+33), 6),
+                MathUtilities.linspace(Math.toRadians(-34), Math.toRadians(-164), 5),
+                MathUtilities.linspace(Math.toRadians(-180+33), Math.toRadians(-33), 6),
                 MathUtilities.linspace(Math.toRadians(-56), Math.toRadians(-180+56), 5),
-                MathUtilities.linspace(Math.toRadians(-60), Math.toRadians(-180+60), 6),
+                MathUtilities.linspace(Math.toRadians(-180+60), Math.toRadians(-60), 6),
                 MathUtilities.linspace(Math.toRadians(-68), Math.toRadians(-180+68), 5),
-                MathUtilities.linspace(Math.toRadians(-71), Math.toRadians(-180+71), 5),
+                MathUtilities.linspace(Math.toRadians(-180+71), Math.toRadians(-71), 5),
 
-                MathUtilities.linspace(Math.toRadians(33), Math.toRadians(180-33), 6),
+                MathUtilities.linspace(0, Math.toRadians(164), 6),
+                MathUtilities.linspace(Math.toRadians(180-33), Math.toRadians(33), 6),
                 MathUtilities.linspace(Math.toRadians(56), Math.toRadians(180-56), 5),
-                MathUtilities.linspace(Math.toRadians(60), Math.toRadians(180-60), 6),
+                MathUtilities.linspace(Math.toRadians(180-60), Math.toRadians(60), 6),
                 MathUtilities.linspace(Math.toRadians(68), Math.toRadians(180-68), 5),
-                MathUtilities.linspace(Math.toRadians(71), Math.toRadians(180-71), 5),
+                MathUtilities.linspace(Math.toRadians(180-71), Math.toRadians(71), 5),
                 MathUtilities.linspace(Math.toRadians(73), Math.toRadians(180-73), 5)
         };
 
@@ -155,6 +156,7 @@ public class ScreenThreeScene extends Node {
                 1000*0.4175*3.35*1.05,
                 1000*0.4175*3.96*1.05,
 
+                1000*0.4175,
                 1000*0.4175*1.59*1.05,
                 1000*0.4175*2.19*1.05,
                 1000*0.4175*2.77*1.05,
@@ -165,7 +167,7 @@ public class ScreenThreeScene extends Node {
 
         int id = 0;
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 6; i++) {
             double[] angles = arc_angles[i];
             double radius = arc_radius[i];
 
@@ -174,7 +176,21 @@ public class ScreenThreeScene extends Node {
                 Table t = new Table(id, p);
                 this.addNode(t);
                 tables.add(t);
-                id++;
+                id = id + 2;
+            }
+        }
+
+        id = 1;
+        for (int i = 6; i < 13; i++) {
+            double[] angles = arc_angles[i];
+            double radius = arc_radius[i];
+
+            for (double angle : angles) {
+                Point p = MathUtilities.polarToCartesian(radius, angle);
+                Table t = new Table(id, p);
+                this.addNode(t);
+                tables.add(t);
+                id = id + 2;
             }
         }
     }
