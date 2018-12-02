@@ -33,6 +33,9 @@ public class ScreenThreeScene extends Node {
     Stopwatch removingStopwatch = Stopwatch.createStarted();
     int removingWaitTime;
 
+    Stopwatch togglingStopwatch = Stopwatch.createStarted();
+    int togglingTime;
+
     List<Table> tables;
 
     public class Table extends Node {
@@ -40,6 +43,9 @@ public class ScreenThreeScene extends Node {
         private int color;
         public int id;
         public Point point;
+
+        private Ani shaking;
+        private Ani growing;
 
         public Table(int id, Point p) {
             color = unhex("FF40a361");
@@ -52,6 +58,32 @@ public class ScreenThreeScene extends Node {
             label.getTransformation().translate(-40, -50).rotate((float) Math.toRadians(-45));
 
             this.addNode(label);
+        }
+
+        public void growTable() {
+            if (canGrow()) {
+                growing = new Ani(this, 4.0f, "size", size + 20, Ani.ELASTIC_IN_OUT);
+            }
+        }
+
+        public void shrinkTable() {
+            if (canShrink()) {
+                 Ani.to(this, 4.0f, "size", size - 20, Ani.ELASTIC_IN_OUT);
+            }
+        }
+
+        private boolean canGrow() {
+            return size < 200;
+        }
+
+        private boolean canShrink() {
+            return size > 100;
+        }
+
+        public void shakeTable() {
+            if (!growing.isPlaying()) {
+                shaking = new Ani(this, 4.0f, "size", this.size + 20, Ani.ELASTIC_IN_OUT);
+            }
         }
 
         @Override
@@ -78,7 +110,7 @@ public class ScreenThreeScene extends Node {
 
         insertionWaitTime = MathUtilities.random(Configuration.thirdScreenMinWaitTime, Configuration.thirdScreenMaxWaitTime);
         removingWaitTime = MathUtilities.random(Configuration.thirdScreenMinWaitTime, Configuration.thirdScreenMaxWaitTime);
-
+        togglingTime = MathUtilities.random(5, 10);
         onScreen = new LinkedList<>();
 
         tables = new LinkedList<>();
@@ -86,6 +118,13 @@ public class ScreenThreeScene extends Node {
     }
 
     class ConnectionNode extends Node {
+
+        public void toogle() {
+            if (alpha == 0)
+                Ani.to(this, 1.5f, "alpha", 255.0f, Ani.LINEAR);
+            else if (alpha == 255)
+                Ani.to(this, 1.5f, "alpha", 0.0f, Ani.LINEAR);
+        }
 
         public ConnectionNode(TableConnection c) {
             this.c = c;
@@ -226,23 +265,57 @@ public class ScreenThreeScene extends Node {
 
         if (removingStopwatch.elapsed(TimeUnit.SECONDS) > removingWaitTime &&
                 toRemoveConnections.peek() != null) {
-            removeConnection(toRemoveConnections.remove());
+
+            TableConnection remove = toRemoveConnections.remove();
+            removeConnection(remove);
             removingStopwatch.stop();
             removingStopwatch.reset();
             removingStopwatch.start();
         }
 
         // TODO if nothing happens
-        if (toInsertConnections.isEmpty() && !onScreen.isEmpty()) {
+        if (toInsertConnections.isEmpty() && toRemoveConnections.isEmpty() && !onScreen.isEmpty()
+                && togglingStopwatch.elapsed(TimeUnit.SECONDS) > togglingTime) {
 
+            int index = MathUtilities.random(0, this.getChildrenCount());
+            int i = 0;
+            for (Node n : this) {
+                if (i == index && n instanceof ConnectionNode) {
+                    ConnectionNode node = (ConnectionNode)this.getNode(index);
+                    node.toogle();
+
+                    if (node.alpha == 0) {
+                        Table table0 = getTable(node.getConnection().a);
+                        Table table1 = getTable(node.getConnection().b);
+                        table0.shrinkTable();
+                        table1.shrinkTable();
+                    }else {
+                        Table table0 = getTable(node.getConnection().a);
+                        Table table1 = getTable(node.getConnection().b);
+                        table0.shrinkTable();
+                        table1.shrinkTable();
+                    }
+
+                    togglingTime = MathUtilities.random(5, 10);
+                    togglingStopwatch.stop();
+                    togglingStopwatch.reset();
+                    togglingStopwatch.start();
+                }
+                i++;
+            }
         }
     }
 
     private void removeConnection(TableConnection connection) {
         if (removeNodeIf(node -> node instanceof ConnectionNode
-                && ((ConnectionNode) node).getConnection().equals(connection))) {
+                && ((ConnectionNode) node).getConnection() == connection)) {
             onScreen.removeIf(nn -> nn.equals(connection));
         }
+
+        Table table0 = getTable(connection.a);
+        Table table1 = getTable(connection.b);
+        table0.shrinkTable();
+        table1.shrinkTable();
     }
 
     private void updateQueues(Set<TableConnection> connections) {
@@ -287,14 +360,11 @@ public class ScreenThreeScene extends Node {
             c1.angle1 = MathUtilities.randomFloat() * 30.0f + 15.0f;
             c1.angle2 = MathUtilities.randomFloat() * 30.0f + 15.0f;
 
-            if (t1.size < 200)
-                Ani.to(t1, 4.0f, "size", t1.size + 20, Ani.ELASTIC_IN_OUT);
-            if (t2.size < 200)
-                Ani.to(t2, 4.0f, "size", t2.size + 20, Ani.ELASTIC_IN_OUT);
+            t1.growTable();
+            t2.growTable();
 
             Ani.to(c1, 1.5f, "alpha", 255.0f, Ani.LINEAR);
             Ani.to(c1, 1.5f, String.format("x:%d,y:%d", p2.x(), p2.y()), Ani.CIRC_IN_OUT);
-
 
             onScreen.add(connection);
             addNode(c1);

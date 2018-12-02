@@ -59,4 +59,12 @@ public abstract class Node implements Iterable<Node> {
     public Iterator<Node> iterator() {
         return nodes.iterator();
     }
+
+    public int getChildrenCount() {
+        return this.nodes.size();
+    }
+
+    public Node getNode(int i) {
+        return this.nodes.get(i);
+    }
 }

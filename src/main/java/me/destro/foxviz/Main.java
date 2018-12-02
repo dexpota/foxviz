@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import processing.core.PApplet;
+import processing.core.PFont;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +29,10 @@ public class Main extends PApplet {
     public static PhrasesDataFetcher phrasesDataFetcher;
     public static Logger logger = LogManager.getLogger();
     public static OkHttpClient client = new OkHttpClient();
+
+    public static PFont title;
+    public static PFont firstScreen;
+    public static PFont secondScreen;
 
     public static void main(String[] args) {
         arguments = ArgumentsUtilities.parseArguments(args);

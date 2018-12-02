@@ -66,17 +66,49 @@ public class SceneUtilities {
             scene.background(Configuration.backgroundColor);
         }));
 
+        Node title1 = new DrawingNode(new DrawingNode.Drawable() {
+            @Override
+            public void draw(PApplet scene) {
+                scene.scale((float) Main.arguments.pixelSize);
+                scene.textFont(Main.title);
+                scene.textSize(18);
+                scene.textLeading(22);
+                scene.fill(Configuration.red.getRed(), Configuration.red.getGreen(), Configuration.red.getBlue());
+                scene.text("1/12\nSala Fucine, Torino", 0, 0);
+                scene.scale((float) (1.0f/Main.arguments.pixelSize));
+            }
+        });
+        title1.getTransformation().translate(100, 80);
+        root.addNode(title1);
+
+        Node title2 = new DrawingNode(new DrawingNode.Drawable() {
+            @Override
+            public void draw(PApplet scene) {
+                scene.scale((float) Main.arguments.pixelSize);
+                scene.textFont(Main.title);
+                scene.textSize(18);
+                scene.textLeading(22);
+                scene.fill(Configuration.red.getRed(), Configuration.red.getGreen(), Configuration.red.getBlue());
+                scene.text("1/12\nMondo, Twitter", 0, 0);
+                scene.scale((float) (1.0f/Main.arguments.pixelSize));
+            }
+        });
+        title2.getTransformation().translate(1050, 80);
+        root.addNode(title2);
+
+        float h_offset = 200.0f;
+
         Node left = new ClipNode((float) (offset_w + 100.f/Main.arguments.pixelSize),
-                (float) (offset_h + 100.f/Main.arguments.pixelSize),
+                (float) (offset_h + h_offset/Main.arguments.pixelSize),
                 (float) (850.f/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
 
         left.addNode(new TextSpawningNode(PhrasesDataStorage::get));
-        left.getTransformation().translate(100, 100);
+        left.getTransformation().translate(100, 150);
 
         Node right = new ClipNode(offset_w + (float) (1050.f/ Main.arguments.pixelSize),
-                (float) (offset_h + 100.f/Main.arguments.pixelSize),
+                (float) (offset_h + h_offset/Main.arguments.pixelSize),
                 (float) (850.f/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
-        right.getTransformation().translate(1050, 100);
+        right.getTransformation().translate(1050, 150);
         right.addNode(new TextSpawningNode(TweetsDataStorage::get));
 
         root.addNode(left);
@@ -97,14 +129,61 @@ public class SceneUtilities {
     }
 
     private static Node buildThirdScreen(float offset_w, float offset_h) {
-        Node screen3 = new ClipNode( offset_w + (float) (4000.f/ Main.arguments.pixelSize), offset_h,
+        Node root = new ClipNode(offset_w + (float) (4000.f/ Main.arguments.pixelSize), offset_h,
                 (float) (2000.f/ Main.arguments.pixelSize), (float) (4000/Main.arguments.pixelSize));
+        root.appendNode(new DrawingNode(scene -> {
+            scene.background(Configuration.backgroundColor);
+        }));
 
-        screen3.getTransformation().translate(4000, 0);
+        root.getTransformation().translate(4000, 0);
 
-        screen3.appendNode(new DrawingNode(scene -> scene.background(Configuration.backgroundColor)))
-                .appendNode(new ScreenThreeScene());
+        Node title1 = new DrawingNode(new DrawingNode.Drawable() {
+            @Override
+            public void draw(PApplet scene) {
+                scene.scale((float) Main.arguments.pixelSize);
+                scene.textFont(Main.title);
+                scene.textSize(18);
+                scene.textLeading(22);
+                scene.fill(Configuration.red.getRed(), Configuration.red.getGreen(), Configuration.red.getBlue());
+                scene.text("1/12\nSala Fucine, Torino", 0, 0);
+                scene.scale((float) (1.0f/Main.arguments.pixelSize));
+            }
+        });
+        title1.getTransformation().translate(100, 80);
+        root.addNode(title1);
 
-        return screen3;
+        Node title2 = new DrawingNode(new DrawingNode.Drawable() {
+            @Override
+            public void draw(PApplet scene) {
+                scene.scale((float) Main.arguments.pixelSize);
+                scene.textFont(Main.title);
+                scene.textSize(18);
+                scene.textLeading(22);
+                scene.fill(Configuration.red.getRed(), Configuration.red.getGreen(), Configuration.red.getBlue());
+                scene.text("1/12\nMondo, Twitter", 0, 0);
+                scene.scale((float) (1.0f/Main.arguments.pixelSize));
+            }
+        });
+        title2.getTransformation().translate(1050, 80);
+        root.addNode(title2);
+
+        float h_offset = 200.0f;
+
+        Node left = new ClipNode((float) (offset_w + 4100.f/Main.arguments.pixelSize),
+                (float) (offset_h + (h_offset + 100.f)/Main.arguments.pixelSize),
+                (float) ((850.f)/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
+
+        left.addNode(new TextSpawningNode(PhrasesDataStorage::get));
+        left.getTransformation().translate(100, 100);
+
+        Node right = new ClipNode(offset_w + (float) (5050.f/ Main.arguments.pixelSize),
+                (float) (offset_h + (h_offset + 100.f)/Main.arguments.pixelSize),
+                (float) ((850.f)/ Main.arguments.pixelSize), (float) (3800/Main.arguments.pixelSize));
+        right.getTransformation().translate(1050, 100);
+        right.addNode(new TextSpawningNode(TweetsDataStorage::get));
+
+        root.addNode(left);
+        root.addNode(right);
+        return root;
     }
 }

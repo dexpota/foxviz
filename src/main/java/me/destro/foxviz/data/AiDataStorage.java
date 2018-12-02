@@ -50,7 +50,7 @@ public class AiDataStorage {
     }
 
     public static Set<TableConnection> getWordsConnections() {
-        connectionsByWordUpdated.set(true);
+        connectionsByWordUpdated.set(false);
         return connectionsByWord.get();
     }
 

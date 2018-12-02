@@ -56,10 +56,10 @@ public class WritingTextNode extends Node {
         // the speed of "typing"
         float h = this.getTextHeight();
 
-        System.out.println(String.format("H: %f", h));
+        //System.out.println(String.format("H: %f", h));
 
 
-        float max_rate = 100;
+        float max_rate = 60;
         float min_rate = 30;
 
         wait = (int) Math.max(Math.min((min_rate - max_rate)/1000 * h + max_rate, max_rate), min_rate);
@@ -67,7 +67,11 @@ public class WritingTextNode extends Node {
 
     void update() {
         if (!isFinished() && timer.elapsed(TimeUnit.MILLISECONDS) > wait) {
-            displayText = fullTextWithBreakingLines.substring(0, displayText.length()+1);
+            if (displayText.length()+1 < fullTextWithBreakingLines.length()) {
+                displayText = fullTextWithBreakingLines.substring(0, displayText.length() + 1);
+            }else {
+                displayText = fullTextWithBreakingLines;
+            }
 
             timer.stop();
             timer.reset();

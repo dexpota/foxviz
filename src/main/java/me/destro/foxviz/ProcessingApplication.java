@@ -26,11 +26,15 @@ public class ProcessingApplication extends PApplet {
         float offset_w = (displayWidth - Main.arguments.width)/2.0f;
         float offset_h = (displayHeight - Main.arguments.height)/2.0f;
 
-        root = SceneUtilities.buildScene(offset_w, offset_h);
+        root = SceneUtilities.buildScene(0, 0);
 
-        root.getTransformation().translate(offset_w, offset_h);
+        root.getTransformation().translate(0, 0);
 
         PFont mono = createFont(Configuration.fontName, Configuration.fontSize);
+        Main.title = createFont("Segoe UI light", Configuration.fontSize);
+        Main.secondScreen = createFont("Segoe UI", Configuration.fontSize);
+        Main.firstScreen = createFont(Configuration.fontName, Configuration.fontSize);
+
         textFont(mono);
     }
 

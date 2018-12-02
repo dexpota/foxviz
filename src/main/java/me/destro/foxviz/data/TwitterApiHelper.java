@@ -33,50 +33,47 @@ public class TwitterApiHelper {
 
         service = retrofit.create(TwitterService.class);
 
-        Observable
-                .create((emitter) -> {
-                    List<TopWord> top50Words = AiDataStorage.getTop50Words();
+        if (!Configuration.debug) {
+            Observable
+                    .create((emitter) -> {
+                        List<TopWord> top50Words = AiDataStorage.getTop50Words();
 
-                    if (top50Words != null && top50Words.size() > 0) {
-                        List<String> sList = new ArrayList<String>();
-                        for (TopWord top : top50Words) {
-                            sList.add(top.word);
+                        if (top50Words != null && top50Words.size() > 0) {
+                            List<String> sList = new ArrayList<String>();
+                            for (TopWord top : top50Words) {
+                                sList.add(top.word);
+                            }
+
+                            String str = sList.stream().collect(Collectors.joining("/"));
+                            service.search(str).blockingSubscribe();
                         }
-
-                        String str = sList.stream().collect(Collectors.joining("/"));
-                        service.search(str).blockingSubscribe();
-                    }
-                    emitter.onComplete();
-                })
-                .retryWhen(f -> f.delay(20, TimeUnit.MILLISECONDS))
-                .repeatWhen(completed -> completed.delay(20, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.io())
-                .subscribe(o -> {
-                    System.out.println("Tweeets");
-                }, error -> {
-                    System.out.println("Error sending top words.");
-                });
+                        emitter.onComplete();
+                    })
+                    .retryWhen(f -> f.delay(20, TimeUnit.MILLISECONDS))
+                    .repeatWhen(completed -> completed.delay(20, TimeUnit.SECONDS))
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(o -> {
+                        System.out.println("Tweeets");
+                    }, error -> {
+                        System.out.println("Error sending top words.");
+                    });
+        }
 
         filteredTweet()
-                .retry()
-                .repeatWhen(completed -> completed.delay(20, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .flatMapIterable(list -> list)
                 .map(item -> item.text)
                 .toList()
+                .retryWhen(f -> f.delay(20, TimeUnit.SECONDS))
+                .repeatWhen(completed -> completed.delay(20, TimeUnit.SECONDS))
                 .subscribe(tweets -> {
                     System.out.println(String.format("Selected tweets %d", tweets.size()));
                     TweetsDataStorage.set(tweets);
                 }, error -> {
                     System.out.println("Error! retrieving tweets");
-                });
+                })
+        ;
 
-        filteredTweet()
-                .flatMapIterable(list -> list)
-                .map(item -> item.text)
-                .toList()
-                .repeatWhen(completed -> completed.delay(20, TimeUnit.SECONDS))
-                .subscribeOn(Schedulers.io()).subscribe(tweets -> TweetsDataStorage.set(tweets));
     }
 
     public Observable<List<Tweet>> filteredTweet() {

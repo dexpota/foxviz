@@ -10,11 +10,17 @@ public final class Configuration {
     public static Color red = Color.decode("0xe94b51");
     public static Color purple = Color.decode("0x583f91");
 
-    public static String phrasesDataUrl = "https://www.visionarydays.it/webapp/corpo.csv";
+    //public static String phrasesDataUrl = "https://www.visionarydays.it/webapp/corpo.csv";
+    //public static String phrasesDataUrl = "https://www.visionarydays.it/webapp/evoluzione.csv";
+    //public static String phrasesDataUrl = "https://www.visionarydays.it/webapp/memoria.csv";
+    public static String phrasesDataUrl = "https://www.visionarydays.it/webapp/societa.csv";
 
     // TODO insert a more appropriate time
     public static int aiDataRepeatTime = 120;
-    public static String aiDataUrl = "https://www.visionarydays.it/viz/output_corpo.json";
+    //public static String aiDataUrl = "https://www.visionarydays.it/viz/output_corpo.json";
+    //public static String aiDataUrl = "https://www.visionarydays.it/viz/output_evoluzione.json";
+    //public static String aiDataUrl = "https://www.visionarydays.it/viz/output_memoria.json";
+    public static String aiDataUrl = "https://www.visionarydays.it/viz/output_societa.json";
 
     // TODO load configuration from ini file
     public static int backgroundColor;
@@ -40,7 +46,7 @@ public final class Configuration {
     public static int secondScreenMaxWords = 1000;
     public static int secondScreenMinWaitTime = 1;
     public static int secondScreenMaxWaitTime = 1;
-    public static float secondScreenTextSize = 26;
+    public static float secondScreenTextSize = 30;
 
     public static int firstScreenMinWaitTime = 1;
     public static int firstScreenMaxWaitTime = 5;

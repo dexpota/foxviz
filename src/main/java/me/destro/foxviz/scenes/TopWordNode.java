@@ -5,6 +5,7 @@ import me.destro.foxviz.Configuration;
 import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.scenegraph.Node;
 import me.destro.foxviz.scenegraph.TextNode;
+import me.destro.foxviz.utilities.MathUtilities;
 import me.destro.foxviz.utilities.Utilities;
 import processing.core.PApplet;
 
@@ -52,7 +53,11 @@ class TopWordNode extends Node {
 
             if (yoyoAnimation == null || (yoyoAnimation != null
                     && !yoyoAnimation[0].isPlaying() && !yoyoAnimation[1].isPlaying())) {
-                yoyoAnimation = Ani.to(this.transformation, 2, String.format("sx:%f,sy:%f", 1.0f, 1.0f), Ani.EXPO_IN_OUT);
+
+                float duration = MathUtilities.random(1, 4);
+                float scaling = (float) ((float) MathUtilities.randomFloat() * 0.2 + 0.9);
+
+                yoyoAnimation = Ani.to(this.transformation, duration, String.format("sx:%f,sy:%f", scaling, scaling), Ani.EXPO_IN_OUT);
                 yoyoAnimation[0].setPlayMode(Ani.YOYO);
                 yoyoAnimation[1].setPlayMode(Ani.YOYO);
                 yoyoAnimation[0].repeat(2);

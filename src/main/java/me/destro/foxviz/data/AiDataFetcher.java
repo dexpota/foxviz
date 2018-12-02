@@ -43,14 +43,14 @@ public class AiDataFetcher {
         // Fetch top50 words
         if (Configuration.debug) {
             generateWord()
-                    .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+                    .repeatWhen(completed -> completed.delay(10, TimeUnit.SECONDS))
                     .subscribeOn(Schedulers.io())
                     .subscribe(AiDataStorage::setTop50Words);
 
-            generateWord()
-                    .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
+            /*generateWord()
+                    .repeatWhen(completed -> completed.delay(10, TimeUnit.SECONDS))
                     .subscribeOn(Schedulers.io())
-                    .subscribe(DataStorage::setTop350Words);
+                    .subscribe(DataStorage::setTop350Words);*/
 
             generateConnection()
                     .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
@@ -58,9 +58,10 @@ public class AiDataFetcher {
                     .subscribe(AiDataStorage::updateTablesConnectionsByWord);
         }else {
             fetchData()
-                    .repeatWhen(completed -> completed.delay(Configuration.aiDataRepeatTime, TimeUnit.SECONDS))
-                    .retry()
+                    .repeatWhen(completed -> completed.delay(10, TimeUnit.SECONDS))
+                    .subscribeOn(Schedulers.computation())
                     .subscribe(data -> {
+                        //System.out.println(String.format("top350 size: %d", data.top350.size()));
                         AiDataStorage.setTop50Words(data.top50);
                         DataStorage.setTop350Words(data.top350);
                         AiDataStorage.updateTablesConnectionsByWord(data.tablesConnectionsByWord);

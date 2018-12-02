@@ -44,6 +44,7 @@ public class TextSpawningNode extends Node {
     @Override
     public void draw(PApplet scene) {
         scene.background(Configuration.backgroundColor);
+        scene.textFont(Main.firstScreen);
 
         phrases = get.get();
         top50 = AiDataStorage.getTop50Words();
@@ -99,16 +100,21 @@ public class TextSpawningNode extends Node {
         return true;
     }
 
+    private boolean doOffset;
+
     private void addTextNode(PApplet scene, String text) {
+        float offset = doOffset ? 100 : 0;
+        doOffset = !doOffset;
+
         WritingTextNode textNode = new WritingTextNode(scene, text,
-                new PVector(0, 0), (float) (850.0f/Main.arguments.pixelSize), 20, 22);
+                new PVector(0, 0), (float) ((850.0f - offset)/Main.arguments.pixelSize), 20, 22);
 
         float textHeight = textNode.getTextHeight();
 
         float startPosition = (float) (-textHeight*Main.arguments.pixelSize - MathUtilities.random(50, 200)) ;
         float endPosition = (float) 4200;
 
-        textNode.getTransformation().translate(0, startPosition);
+        textNode.getTransformation().translate(offset, startPosition);
 
 
         float space = endPosition - startPosition;
