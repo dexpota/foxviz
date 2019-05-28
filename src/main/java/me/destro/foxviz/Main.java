@@ -3,10 +3,7 @@ package me.destro.foxviz;
 import com.github.javafaker.Faker;
 import com.squareup.moshi.Moshi;
 import io.reactivex.Observable;
-import me.destro.foxviz.data.AiDataFetcher;
-import me.destro.foxviz.data.DataStorage;
-import me.destro.foxviz.data.PhrasesDataFetcher;
-import me.destro.foxviz.data.TwitterApiHelper;
+import me.destro.foxviz.data.*;
 import me.destro.foxviz.cli.Arguments;
 import me.destro.foxviz.data.model.TopWord;
 import me.destro.foxviz.data.model.TopWord.TopWordAdapter;
@@ -25,8 +22,10 @@ import java.util.concurrent.TimeUnit;
 public class Main extends PApplet {
     public static Arguments arguments;
     public static TwitterApiHelper api;
-    public static AiDataFetcher ai;
-    public static PhrasesDataFetcher phrasesDataFetcher;
+    //public static AiDataFetcher ai;
+    public static AiDataLoader ai;
+    //public static PhrasesDataFetcher phrasesDataFetcher;
+    public static PhrasesDataLoader phrasesDataLoader;
     public static Logger logger = LogManager.getLogger();
     public static OkHttpClient client = new OkHttpClient();
 
@@ -38,8 +37,10 @@ public class Main extends PApplet {
         arguments = ArgumentsUtilities.parseArguments(args);
 
         api = new TwitterApiHelper();
-        phrasesDataFetcher = new PhrasesDataFetcher();
-        ai = new AiDataFetcher();
+        //phrasesDataFetcher = new PhrasesDataFetcher();
+        phrasesDataLoader = new PhrasesDataLoader(arguments.tablePhrases);
+        //ai = new AiDataFetcher();
+        ai = new AiDataLoader(arguments.ai);
 
         PApplet.main(ProcessingApplication.class, args);
     }

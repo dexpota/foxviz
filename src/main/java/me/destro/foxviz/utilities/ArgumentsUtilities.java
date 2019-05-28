@@ -29,6 +29,18 @@ public class ArgumentsUtilities {
                 .type(Double.class)
                 .help("Pixel size in mm.");
 
+        parser.addArgument("--table-phrases")
+                .dest("table-phrases")
+                .required(true)
+                .type(String.class)
+                .help("File with the phrases by the table");
+
+        parser.addArgument("--ai")
+                .dest("ai")
+                .required(true)
+                .type(String.class)
+                .help("File with the output from the AI");
+
         return parser;
     }
 
@@ -43,6 +55,10 @@ public class ArgumentsUtilities {
             System.exit(1);
         }
 
-        return new Arguments(ns.getInt("width"), ns.getInt("height"), ns.getDouble("pixel-size"));
+        return new Arguments(ns.getInt("width"),
+                ns.getInt("height"),
+                ns.getDouble("pixel-size"),
+                ns.getString("table-phrases"),
+                ns.getString("ai"));
     }
 }
