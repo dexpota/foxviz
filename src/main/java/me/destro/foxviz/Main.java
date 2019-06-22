@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Main extends PApplet {
     public static Arguments arguments;
-    public static TwitterApiHelper api;
+    //public static TwitterApiHelper api;
+    public static TwitterDataLoader twitterDataLoader;
     //public static AiDataFetcher ai;
     public static AiDataLoader ai;
     //public static PhrasesDataFetcher phrasesDataFetcher;
@@ -36,11 +37,13 @@ public class Main extends PApplet {
     public static void main(String[] args) {
         arguments = ArgumentsUtilities.parseArguments(args);
 
-        api = new TwitterApiHelper();
+        //api = new TwitterApiHelper();
+        twitterDataLoader = new TwitterDataLoader(arguments.twitter);
         //phrasesDataFetcher = new PhrasesDataFetcher();
         phrasesDataLoader = new PhrasesDataLoader(arguments.tablePhrases);
         //ai = new AiDataFetcher();
         ai = new AiDataLoader(arguments.ai);
+
 
         PApplet.main(ProcessingApplication.class, args);
     }
