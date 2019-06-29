@@ -41,6 +41,12 @@ public class ArgumentsUtilities {
                 .type(String.class)
                 .help("File with the output from the AI");
 
+        parser.addArgument("--twitter")
+                .dest("twitter")
+                .required(true)
+                .type(String.class)
+                .help("File with the output from twitter.");
+
         return parser;
     }
 
@@ -59,6 +65,6 @@ public class ArgumentsUtilities {
                 ns.getInt("height"),
                 ns.getDouble("pixel-size"),
                 ns.getString("table-phrases"),
-                ns.getString("ai"));
+                ns.getString("ai"), ns.getString("twitter"));
     }
 }
