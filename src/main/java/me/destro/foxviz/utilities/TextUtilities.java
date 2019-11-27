@@ -1,12 +1,12 @@
 package me.destro.foxviz.utilities;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextUtilities {
-
     public static String createLineBreaks(String str, float maxWidth, PApplet scene) {
         // Remove unnecessary spaces
         // and add (unix) linebreak characters if line length exceeds maxWidth
